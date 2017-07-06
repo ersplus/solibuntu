@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ======================================================================
-# Script d'installation du filtrage
+# Script d'installation de l'iso
 # ======================================================================
 
 repinstallation="/opt/borne"
