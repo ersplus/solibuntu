@@ -16,7 +16,7 @@ repinstallation="/opt/borne"
 	echo "30" ; sleep 1
 	echo "# Mise à jour" ; sudo apt clean
 	echo "40" ; sleep 1
-	echo "# Installation filtrage" ; sudo gdebi-gtk --auto-close /opt/borne/share/ctparental_ubnutu_16.04_4.20.18-1.0_all.deb
+	echo "# Installation filtrage" ; sudo gdebi-gtk --auto-close /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
 	echo "70" ; sleep 1
 	echo "# Configuation du proxy" ; sudo cp -rf /opt/borne/share/proxy/defaulton /etc/chromium-browser/default
 	echo "80" ; sleep 1

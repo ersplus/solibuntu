@@ -43,10 +43,12 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 	echo "10" ; sleep 1
 	echo "# Vérification des mises à jour" ; sudo apt update
 	echo "20" ; sleep 1
-	echo "# Application des mises à jour" ; sudo apt upgrade -y
-	echo "50" ; sleep 1
-	echo "# Mise à jour" ; sudo apt clean
-	echo "75" ; sleep 1
+	echo "# Application des mises à jour" ; sudo apt full-upgrade -y
+	echo "40" ; sleep 1
+	echo "# Mise à jour" ; sudo apt install -f
+	echo "60" ; sleep 1
+	echo "# Mise à jour" ; sudo apt autoremove --purge -y
+	echo "80" ; sleep 1
 	echo "# Redémarrage du système" ; sudo reboot
 	echo "99" ; sleep 1
 	) |

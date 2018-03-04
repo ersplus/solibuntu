@@ -23,7 +23,9 @@ if (test -f "/usr/sbin/dansguardian"); then
 			zenity --info="Le filtrage a été supprimé. L'ordinateur va redémarrer"
 			# Redémarrage
 			reboot
+
 else zenity --info --text="Le filrage n'est pas installé !"
+
 fi
 
 exit 0
