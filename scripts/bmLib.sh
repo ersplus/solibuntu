@@ -77,6 +77,32 @@ pErr() {
     logger -p local0.${niv} "${mess}"
 }
 
+# ======================================================================
+# Test couple identifiant-mdp
+# ======================================================================
+testMdp() {
+    $utilisateur=$1
+    $MDP=$2
+    export MDP
+
+    id -u $utilisateur > /dev/null
+
+    if [ $? = 0 ]
+    then
+        CRYPTPASS=`grep -w "$utilisateur" /etc/shadow | cut -d: -f2`
+        export ALGO=`echo $CRYPTPASS | cut -d'$' -f2`
+        export SALT=`echo $CRYPTPASS | cut -d'$' -f3`
+        GENPASS=$(perl -le 'print crypt("$ENV{MDP}", "\$$ENV{ALGO}\$$ENV{SALT}\$")')
+        if [ "$GENPASS" == "$CRYPTPASS" ]
+        then
+            exit 0
+        else
+            exit 1
+        fi
+    fi
+}
+
+
 # =================
 # Fin des fonctions
 # =================

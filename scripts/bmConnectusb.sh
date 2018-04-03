@@ -35,7 +35,7 @@ else
 		if diff /tmp/.KEYC /root/.uniqUSBKEY ; then
 			echo "c" > /tmp/.cle
 			rm /tmp/.KEYC
-                        pkill  feh
+            pkill  feh
 			exit 0
 		fi
 
@@ -102,7 +102,10 @@ while [ $ret -ne 0 ]
 # [ `whoami` = root ] || { gksudo "$0" "$@"; exit $?; }
 
 		case ${ret} in
-			1) if [ $(zenity --password) = "AdminAsso" ];then
+			1)user="gestionnaire" 
+			pass=$(zenity --password)
+			verif=`testMdp $user $pass`
+			if [ $verif == 1 ];then
 			$repinstallation/scripts/bmConfigborne.sh
 			fi
 			ret=2
