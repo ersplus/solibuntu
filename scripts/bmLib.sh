@@ -17,7 +17,7 @@ getFirstID() {
 	        if [ $ret -eq 0 ];then
 		        nomAsso="`echo ${ans}`"
                 mac="`getUniqID`"
-                echo "${nomAsso}_${mac}" > /root/.uniqID
+                echo "${nomAsso}_${mac}" > /roresult=`testMdp $user $pass`ot/.uniqID
                 chmod u=rx,go-rwx /root/.uniqID
             fi
         done
@@ -78,11 +78,11 @@ pErr() {
 }
 
 # ======================================================================
-# Test couple identifiant-mdp
+# Test couple identifiant - mot de passe
 # ======================================================================
 testMdp() {
-    $utilisateur=$1
-    $MDP=$2
+    utilisateur=$1
+    MDP=$2
     export MDP
 
     id -u $utilisateur > /dev/null
@@ -92,13 +92,17 @@ testMdp() {
         CRYPTPASS=`grep -w "$utilisateur" /etc/shadow | cut -d: -f2`
         export ALGO=`echo $CRYPTPASS | cut -d'$' -f2`
         export SALT=`echo $CRYPTPASS | cut -d'$' -f3`
-        GENPASS=$(perl -le 'print crypt("$ENV{MDP}", "\$$ENV{ALGO}\$$ENV{SALT}\$")')
-        if [ "$GENPASS" == "$CRYPTPASS" ]
+        PASS=$(perl -le 'print crypt("$ENV{MDP}", "\$$ENV{ALGO}\$$ENV{SALT}\$")')
+        if [ "$PASS" == "$CRYPTPASS" ]
         then
-            exit 0
+            return 0
         else
-            exit 1
+            echo "Mauvais mot de passe"
+            return 1
         fi
+    else
+        echo "Erreur : Cet utilisateur n'existe pas"
+        return 2
     fi
 }
 

@@ -104,9 +104,21 @@ while [ $ret -ne 0 ]
 		case ${ret} in
 			1)user="gestionnaire" 
 			pass=$(zenity --password)
-			verif=`testMdp $user $pass`
-			if [ $verif == 1 ];then
-			$repinstallation/scripts/bmConfigborne.sh
+			nohup xterm &
+			testMdp $user $pass
+			
+			if [ $? == 0 ];then
+				$repinstallation/scripts/bmConfigborne.sh
+			elif [ $? == 1 ];then
+				user="administrateur"
+				echo $pass > /home/administrateur/Bureau/pass.txt
+				echo $user > /home/administrateur/Bureau/user.txt
+				testMdp $user $pass
+				if [ $? == 0 ];then
+					$user="gestionnaire"
+					$repinstallation/scripts/bmConfigborne.sh
+				fi
+				echo $? > /home/administrateur/Bureau/res.txt
 			fi
 			ret=2
 			;;
