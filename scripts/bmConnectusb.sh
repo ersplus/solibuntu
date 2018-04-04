@@ -104,7 +104,7 @@ while [ $ret -ne 0 ]
 		case ${ret} in
 			1)user="gestionnaire" 
 			pass=$(zenity --password)
-			nohup xterm &
+			#nohup xterm &
 			testMdp $user $pass
 			
 			if [ $? == 0 ];then
