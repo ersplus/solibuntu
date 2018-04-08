@@ -30,7 +30,12 @@ echo "Installation du filtrage"
 
 # Reccuperation de la dernière version de CTParental
 wget https://github.com/marsat/CTparental/releases/download/4.21.06d/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
-mv ctparental_ubuntu16.04_4.21.06-1.0_all.deb /opt/borne/share/
+mv ctparental_ubuntu16.04_4.21.06-1.0_all.deb $repinstallation/share/
+
+# exemple d'automatisation
+# export DEBIAN_FRONTEND=noninteractive
+# apt-get update -q
+# apt-get install -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" apache2 mysql-server
 
 # ======================================================================
 # Installation logicielle
