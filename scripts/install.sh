@@ -1,11 +1,10 @@
 #! /bin/bash
 
-# ======================================================================
-# Script d'installation
-# Sur une base Xubuntu 16.04
-# Utilisateur de base adminitrateur
-# Script en cours...
-# ======================================================================
+### Projet Solisol.org               ###
+### Solibuntu                        ###
+### Installation Solibuntu           ###
+### 08/04/2018                       ###
+
 
 repinstallation="/opt/borne"
 
