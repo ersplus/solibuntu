@@ -75,6 +75,9 @@ cd /usr/share/plymouth/themes/
 tar -xvf $repinstallation/share/plymouth.tar.gz
 echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n ModuleName=script \n \n [script] \n ImageDir=/usr/share/plymouth/themes/solibuntu \n ScriptFile=/usr/share/plymouth/themes/solibuntu/solibuntu.script \n" > /usr/share/plymouth/themes/default.plymouth
 
+echo "Squelette environnement Invité"
+ln -s /home/gestionnaire /etc/guest-session/skel
+
 
 echo "Fin de l'installation"
 
