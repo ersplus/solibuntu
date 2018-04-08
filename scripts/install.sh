@@ -29,11 +29,9 @@ passwd gestionnaire
 
 echo "Installation du filtrage"
 
-# Installation non automatisée
-# wget https://github.com/marsat/CTparental/releases/download/4.20.7d/ctparental_ubuntu_16.04_4.20.7-1.0_all.deb
-# La dépendance gdebi n'est plus necessaire...
-# gdebi ctparental_ubuntu_16.04_4.20.7-1.0_all.deb -y
-# CTparental -ubl 
+# Reccuperation de la dernière version de CTParental
+wget https://github.com/marsat/CTparental/releases/download/4.21.06d/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
+mv ctparental_ubuntu16.04_4.21.06-1.0_all.deb /opt/borne/share/
 
 # ======================================================================
 # Installation logicielle
