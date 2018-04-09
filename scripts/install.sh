@@ -1,11 +1,10 @@
 #! /bin/bash
 
-# ======================================================================
-# Script d'installation
-# Sur une base Xubuntu 16.04
-# Utilisateur de base adminitrateur
-# Script en cours...
-# ======================================================================
+### Projet Solisol.org               ###
+### Solibuntu                        ###
+### Installation Solibuntu           ###
+### 08/04/2018                       ###
+
 
 repinstallation="/opt/borne"
 
@@ -29,11 +28,14 @@ passwd gestionnaire
 
 echo "Installation du filtrage"
 
-# Installation non automatisée
-# wget https://github.com/marsat/CTparental/releases/download/4.20.7d/ctparental_ubuntu_16.04_4.20.7-1.0_all.deb
-# La dépendance gdebi n'est plus necessaire...
-# gdebi ctparental_ubuntu_16.04_4.20.7-1.0_all.deb -y
-# CTparental -ubl 
+# Reccuperation de la dernière version de CTParental
+wget https://github.com/marsat/CTparental/releases/download/4.21.06d/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
+mv ctparental_ubuntu16.04_4.21.06-1.0_all.deb $repinstallation/share/
+
+# exemple d'automatisation
+# export DEBIAN_FRONTEND=noninteractive
+# apt-get update -q
+# apt-get install -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" apache2 mysql-server
 
 # ======================================================================
 # Installation logicielle
@@ -74,6 +76,9 @@ cp -f $repinstallation/scripts/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lig
 cd /usr/share/plymouth/themes/
 tar -xvf $repinstallation/share/plymouth.tar.gz
 echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n ModuleName=script \n \n [script] \n ImageDir=/usr/share/plymouth/themes/solibuntu \n ScriptFile=/usr/share/plymouth/themes/solibuntu/solibuntu.script \n" > /usr/share/plymouth/themes/default.plymouth
+
+echo "Squelette environnement Invité"
+ln -s /home/gestionnaire /etc/guest-session/skel
 
 
 echo "Fin de l'installation"
