@@ -43,7 +43,6 @@ else
 	rm /tmp/.KEY*
 	zenity --info --text="Pas de clé"
 	ret=2
-		
 fi
 }
 # Définition des locales
@@ -102,7 +101,11 @@ while [ $ret -ne 0 ]
 # [ `whoami` = root ] || { gksudo "$0" "$@"; exit $?; }
 
 		case ${ret} in
-			1)user="gestionnaire" 
+			1) 
+			#if [ $(zenity --password) == "AdminAsso" ] ; then 
+			#	$repinstallation/scripts/bmConfigborne.sh; 
+			#fi
+			user="gestionnaire" 
 			pass=$(zenity --password)
 			#nohup xterm &
 			testMdp $user $pass
@@ -117,9 +120,9 @@ while [ $ret -ne 0 ]
 					$repinstallation/scripts/bmConfigborne.sh
 				fi
 			fi
-			ret=2
 			;;
-			0) getUsbkey
+			0)
+			getUsbkey
 			;;
 		esac
 

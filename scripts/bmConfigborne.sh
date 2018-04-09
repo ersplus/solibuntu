@@ -4,6 +4,18 @@
 export LANG=fr_FR.UTF-8
 
 # ======================================================================
+#Chargement librairie
+# ======================================================================
+
+repinstallation="/opt/borne"
+
+[ ! -f $repinstallation/scripts/bmLib.sh ] && logger -p local0.crit 'Impossible de trouver la bibliothèque standard. Abandon.' && exit 1
+. $repinstallation/scripts/bmLib.sh
+
+#[ ! -f /usr/bin/CTparental ] && logger -p local0.crit 'Impossible de trouver la bibliothèque CTparental. Abandon.' && exit 1
+#. /usr/bin/CTparental
+
+# ======================================================================
 # Script de gestion du mode de filtrage
 # ======================================================================
 
@@ -29,7 +41,8 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 		false "Redémarrer l'ordinateur" \
 		false "Mettre à jour et redémarrer" \
 		false "Configurer l'ordinateur" \
-		false "Créer une clé USB")
+		false "Créer une clé USB" \
+		false "Modifier mot de passe gestionnaire")
 
   case ${reponse} in
 	"Arrêter l'ordinateur|")
@@ -100,6 +113,40 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 	fi
 
 	ret=2
+	;;
+	"Modifier mot de passe gestionnaire|")
+		entr=`zenity --forms \
+			--title="Changement du mot de passe" \
+			--text="Définir un nouveau mot de passe" \
+			--add-password="Nouveau mot de passe" \
+			--add-password="Confirmer le nouveau mot de passe" \
+			-- separator="|"`
+	
+		if [ $? == 0 ]; then
+			pass=`echo $entr | cut -d'|' -f1`
+			passverif=`echo $entr | cut -d'|' -f2`
+			if [ $pass == $passverif ]; then
+				testSecu $pass
+				if [ 0 == 0 ]; then
+					testDispo $pass
+					if [ $? == 0 ] ; then
+					zenity --question --text "Voulez-vous vraiment modifier le mot de passe gestionnaire ?"
+						if [ $? == 0 ] ; then
+							echo -e "$pass\n$pass" | passwd gestionnaire
+							# Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
+							/usr/bin/CTparental -setadmin gestionnaire $pass
+							zenity --info --text="Le mot de passe a été modifié avec succès"
+						fi
+					else
+						zenity --error
+					fi
+				else
+					zenity --info --text="Le mot de passe n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+				fi
+			else
+				zenity --info --text="Les mots de passe doivent être identiques !"
+			fi
+		fi
 	;;
   esac
 

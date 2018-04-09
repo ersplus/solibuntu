@@ -95,17 +95,52 @@ testMdp() {
         PASS=$(perl -le 'print crypt("$ENV{MDP}", "\$$ENV{ALGO}\$$ENV{SALT}\$")')
         if [ "$PASS" == "$CRYPTPASS" ]
         then
+            # L'identifiant et le mot de passe correspondent
             return 0
         else
-            echo "Mauvais mot de passe"
+            # Mauvais mot de passe
             return 1
         fi
     else
-        echo "Erreur : Cet utilisateur n'existe pas"
+        # Utilisateur inexistant
         return 2
     fi
 }
 
+# ======================================================================
+# Test nouveau mot de passe != mot de passe administrateur
+# ======================================================================
+testDispo() {
+    utilisateur="administrateur"
+    pass=$1
+    testMdp $utilisateur $pass
+    if [ $? == 0 ]; then
+        # Le mot de passe est celui de l'administrateur
+        return 1
+    elif [ $? == 1 ]; then
+        # Le mot de passe n'est pas celui de l'administrateur
+        return 0
+    fi
+
+}
+
+# ======================================================================
+# Test la sécurité du mot de passe
+# ======================================================================
+testSecu() {
+    password=$1
+    password="$(echo "$password" | grep -E "^([a-z0-9A-Z]|[&éè~#{}()ç_@à?.;:/\!,\$<>=£\%\])*$")"
+    if [ "${#password}" -ge 8 ] ; then
+        # Le mot de passe est valide
+        return 0
+    else
+        # Le mot de passe n'est pas valide
+        zinity --info --text "Password is not complex enough, it must contain at least: \n \
+                            8 characters total, 1 uppercase, lowercase 1, number 1 \n \
+                            and one special character among the following : &éè~#{}()ç_@à?.;:/!,$<>=£%"
+        return 1
+    fi
+}
 
 # =================
 # Fin des fonctions
