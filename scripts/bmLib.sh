@@ -135,7 +135,7 @@ testSecu() {
         return 0
     else
         # Le mot de passe n'est pas valide
-        zinity --info --text "Password is not complex enough, it must contain at least: \n \
+        zenity --info --text "Password is not complex enough, it must contain at least: \n \
                             8 characters total, 1 uppercase, lowercase 1, number 1 \n \
                             and one special character among the following : &éè~#{}()ç_@à?.;:/!,$<>=£%"
         return 1
