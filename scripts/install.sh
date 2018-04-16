@@ -8,6 +8,20 @@
 
 repinstallation="/opt/borne"
 
+#-------------------------------------------------------
+# Création du compte gestionnaire
+#-------------------------------------------------------
+sudo useradd -m gestionnaire
+echo -e "AdminAsso\nAdminAsso" | passwd gestionnaire
+
+#-------------------------------------------------------
+#  Création du dossier d'installation et copie du projet
+#-------------------------------------------------------
+#cd /opt/
+#wget https://github.com/ersplus/solibuntu/archive/master.zip
+#unzip master.zip
+#mv /opt/solibuntu-master /opt/borne
+cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
 chmod +x $repinstallation/scripts/*.sh
 
 # ======================================================================
@@ -18,9 +32,9 @@ echo "Création des utilisateurs"
 echo "Modification du compte administtrateur"
 usermod -c "Administrateur Solibuntu" administrateur
 
-echo "Création du compte Gestionnaire Solibuntu"
-adduser --quiet --gecos "Gestionnaire Solibuntu" gestionnaire
-passwd gestionnaire
+#echo "Création du compte Gestionnaire Solibuntu"
+#adduser --quiet --gecos "Gestionnaire Solibuntu" gestionnaire
+#passwd gestionnaire
 
 # ======================================================================
 # Installation du filtrage
@@ -31,11 +45,8 @@ echo "Installation du filtrage"
 # Reccuperation de la dernière version de CTParental
 wget https://github.com/marsat/CTparental/releases/download/4.21.06d/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
 mv ctparental_ubuntu16.04_4.21.06-1.0_all.deb $repinstallation/share/
-
-# exemple d'automatisation
-# export DEBIAN_FRONTEND=noninteractive
-# apt-get update -q
-# apt-get install -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" apache2 mysql-server
+cd $repinstallation/scripts
+sudo ./filtrage_install.sh
 
 # ======================================================================
 # Installation logicielle
@@ -79,6 +90,20 @@ echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n Modul
 
 echo "Squelette environnement Invité"
 ln -s /home/gestionnaire /etc/guest-session/skel
+
+
+#-------------------------------------------------------
+# Installation des logiciels
+#-------------------------------------------------------
+
+sudo apt install -y gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree ttf-alee ttf-ancient-fonts ttf-arabeyes fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp ttf-atarismall fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip cups-pdf exfat-utils chromium-browser imagemagick xsane
+sudo apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr 
+
+
+#-------------------------------------------------------
+#  Écran de connexion de la session invité
+#-------------------------------------------------------
+echo -e "[Seat: *]\nguest-wrapper=/usr/local/bin/bmGuestwrapper.sh\n" > /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
 
 
 echo "Fin de l'installation"
