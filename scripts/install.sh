@@ -18,9 +18,9 @@ echo -e "AdminAsso\nAdminAsso" | passwd gestionnaire
 #  Création du dossier d'installation et copie du projet
 #-------------------------------------------------------
 cd /opt/
-wget https://github.com/ersplus/solibuntu/archive/master.zip
-unzip master.zip
-mv /opt/solibuntu-master /opt/borne
+wget https://github.com/ersplus/solibuntu/archive/Bastien.zip
+unzip Bastien.zip
+mv /opt/solibuntu-Bastien /opt/borne
 #cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
 sudo chown -R administrateur /opt/borne/
 chmod +x $repinstallation/scripts/*.sh
