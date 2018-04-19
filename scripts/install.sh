@@ -17,11 +17,12 @@ echo -e "AdminAsso\nAdminAsso" | passwd gestionnaire
 #-------------------------------------------------------
 #  Création du dossier d'installation et copie du projet
 #-------------------------------------------------------
-#cd /opt/
-#wget https://github.com/ersplus/solibuntu/archive/master.zip
-#unzip master.zip
-#mv /opt/solibuntu-master /opt/borne
-cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
+cd /opt/
+wget https://github.com/ersplus/solibuntu/archive/master.zip
+unzip master.zip
+mv /opt/solibuntu-master /opt/borne
+#cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
+sudo chown -R administrateur /opt/borne/
 chmod +x $repinstallation/scripts/*.sh
 
 # ======================================================================
@@ -35,6 +36,14 @@ usermod -c "Administrateur Solibuntu" administrateur
 #echo "Création du compte Gestionnaire Solibuntu"
 #adduser --quiet --gecos "Gestionnaire Solibuntu" gestionnaire
 #passwd gestionnaire
+
+#-------------------------------------------------------
+# Installation des logiciels
+#-------------------------------------------------------
+
+sudo apt install -y gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree ttf-alee ttf-ancient-fonts ttf-arabeyes fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp ttf-atarismall fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip cups-pdf exfat-utils chromium-browser imagemagick xsane
+sudo apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr 
+sudo apt-get install -y gdebi
 
 # ======================================================================
 # Installation du filtrage
@@ -90,15 +99,6 @@ echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n Modul
 
 echo "Squelette environnement Invité"
 ln -s /home/gestionnaire /etc/guest-session/skel
-
-
-#-------------------------------------------------------
-# Installation des logiciels
-#-------------------------------------------------------
-
-sudo apt install -y gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree ttf-alee ttf-ancient-fonts ttf-arabeyes fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp ttf-atarismall fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip cups-pdf exfat-utils chromium-browser imagemagick xsane
-sudo apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr 
-
 
 #-------------------------------------------------------
 #  Écran de connexion de la session invité
