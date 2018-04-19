@@ -40,11 +40,10 @@ usermod -c "Administrateur Solibuntu" administrateur
 #-------------------------------------------------------
 # Configuration des paquets
 #-------------------------------------------------------
-config() {
-	while read line; do
-		echo $line | debconf-set-selections
-	done < /opt/borne/share/setselection.txt
-}
+while read line; do
+	echo $line | debconf-set-selections
+done < /opt/borne/share/setselection.txt
+
 
 #-------------------------------------------------------
 # Installation des logiciels
