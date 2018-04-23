@@ -8,11 +8,7 @@ installFiltrage() {
 	gdebi-gtk --auto-close /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
 	cp -rf /opt/borne/CTParental /usr/bin/CTParental
 }
-config() {
-	while read line; do
-		echo $line | debconf-set-selections
-	done < /opt/borne/share/setselection.txt
-}
+
 # ======================================================================
 # Script d'installation du filtrage
 # ======================================================================

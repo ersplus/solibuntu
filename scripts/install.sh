@@ -105,15 +105,17 @@ cd /usr/share/plymouth/themes/
 tar -xvf $repinstallation/share/plymouth.tar.gz
 echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n ModuleName=script \n \n [script] \n ImageDir=/usr/share/plymouth/themes/solibuntu \n ScriptFile=/usr/share/plymouth/themes/solibuntu/solibuntu.script \n" > /usr/share/plymouth/themes/default.plymouth
 
+# Liaison vers le profil utilisateur
 echo "Squelette environnement Invité"
 ln -s /home/gestionnaire /etc/guest-session/skel
 
 #-------------------------------------------------------
 #  Écran de connexion de la session invité
 #-------------------------------------------------------
-echo -e "[Seat: *]\nguest-wrapper=/usr/local/bin/bmGuestwrapper.sh\n" > /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
-
-
+echo -e "[Seat: *]\nguest-wrapper=/usr/local/bin/bmGuestwrapper.sh\ngreeter-setup-script=/opt/borne/scripts/bmConnectusb.sh" > /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
+echo -e "[SeatDefaults]\nallow-guest=true\nautologin-guest=true\nautologin-user-timeout=1\nautologin-session=lightdm-autologin\nuser-session=xubuntu" > /etc/lightdm/lightdm.conf.d/50-autoguest.conf
+sudo apt-get install -y dconf-cli
+dconf reset /
 echo "Fin de l'installation"
 
 exit 0
