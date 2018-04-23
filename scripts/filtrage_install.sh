@@ -6,7 +6,7 @@
 installFiltrage() {
 	#sudo dpkg -i /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
 	gdebi-gtk --auto-close /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
-	cp -rf /opt/borne/CTParental /usr/bin/CTParental
+	cp -rf /opt/borne/CTparental /usr/bin/CTparental
 }
 
 # ======================================================================
