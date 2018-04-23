@@ -26,8 +26,6 @@ repinstallation="/opt/borne"
 	echo "# Mise à jour" ; sudo apt clean
 	echo "40" ; sleep 1
 	echo "# Installation debconf-utils" ;  sudo apt-get install debconf-utils
-	echo "45" ; sleep 1
-	echo "# Configuation des dépendances"; config
 	echo "50" ; sleep 1
 	echo "# Installation des dépendances"; sudo apt-get install -y clamav clamav-base clamav-freshclam console-data dansguardian dnsmasq gamin iptables-persistent libclamav7 libgamin0 libllvm3.6v5 liblua5.1-0 libnss3-tools lighttpd lighttpd-mod-magnet netfilter-persistent php-cgi php-common php-xml php7.0-cgi php7.0-cli php7.0-common php7.0-json php7.0-opcache php7.0-readline php7.0-xml privoxy spawn-fcgi
 	echo "60" ; sleep 1
