@@ -82,7 +82,8 @@ apt install exfat-utils hplip hplip-gui gksu feh yad -y
 
 # Pour installer le greffon sans installer l'imprimante
 # a automatiser
-hp-plugin -i
+
+#echo "d\ny\ny\n" | hp-plugin -i
 
 # Nettoyage
 apt-get autoremove -y 
@@ -112,10 +113,14 @@ ln -s /home/gestionnaire /etc/guest-session/skel
 #-------------------------------------------------------
 #  Écran de connexion de la session invité
 #-------------------------------------------------------
-echo -e "[Seat: *]\nguest-wrapper=/usr/local/bin/bmGuestwrapper.sh\ngreeter-setup-script=/opt/borne/scripts/bmConnectusb.sh" > /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
-echo -e "[SeatDefaults]\nallow-guest=true\nautologin-guest=true\nautologin-user-timeout=1\nautologin-session=lightdm-autologin\nuser-session=xubuntu" > /etc/lightdm/lightdm.conf.d/50-autoguest.conf
-sudo apt-get install -y dconf-cli
-dconf reset /
+
+#echo -e "[Seat: *]\nguest-wrapper=/usr/local/bin/bmGuestwrapper.sh\ngreeter-setup-script=/opt/borne/scripts/bmConnectusb.sh" > /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
+#echo -e "[SeatDefaults]\nallow-guest=true\nautologin-guest=true\nautologin-user-timeout=1\nautologin-session=lightdm-autologin\nuser-session=xubuntu" > /etc/lightdm/lightdm.conf.d/50-autoguest.conf
+#echo -e "[Seat:*]\nsession-cleanup-script = /opt/borne/scripts/bmRestoreInvite.sh" > /etc/lightdm/lightdm.conf.d/50-logout-restoreinvite.conf
+cp $repinstallation/scripts/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/
+cp $repinstallation/scripts/lightdm.conf.d/* /etc/lightdm/lightdm.conf.d/
+cd $repinstallation/scripts
+
 echo "Fin de l'installation"
 
 exit 0

@@ -12,10 +12,10 @@ getFirstID() {
     if [ ! -f /root/.uniqID ] ;then
         ret=1
         while [ $ret -eq 1 ]; do
-	        ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Nom de l'association")
-	        ret=$?
-	        if [ $ret -eq 0 ];then
-		        nomAsso="`echo ${ans}`"
+            ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Nom de l'association")
+            ret=$?
+            if [ $ret -eq 0 ];then
+            nomAsso="`echo ${ans}`"
                 mac="`getUniqID`"
                 echo "${nomAsso}_${mac}" > /roresult=`testMdp $user $pass`ot/.uniqID
                 chmod u=rx,go-rwx /root/.uniqID
