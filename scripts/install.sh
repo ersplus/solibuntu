@@ -78,6 +78,8 @@ apt full-upgrade -y && apt install -f && apt-get clean
 
 # Suppression des applications
 apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
+# Les jeux
+apt remove sgt-launcher sgt-puzzles gnome-sudoku gnome-mine -y
 
 # Chrome n'est plus le navigateur de Solibuntu
 
