@@ -41,7 +41,7 @@ echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n Modul
 echo "Squelette environnement Invité"
 ln -s /home/gestionnaire /etc/guest-session/skel
 
-# Autologin
+# Configuration Autologin et les scripts de lightdm
 cp -f $repinstallation/scripts/lightdm.conf.d/50-logout-restoreinvite.conf /etc/lightdm/lightdm.conf.d/50-logout-restoreinvite.conf
 cp -f $repinstallation/scripts/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
 
@@ -68,16 +68,15 @@ while read line; do
 	echo $line | debconf-set-selections
 done < /opt/borne/share/setselection.txt
 
-
 #-------------------------------------------------------
 # Installation des logiciels
 #-------------------------------------------------------
+
 echo "Installation logicielle"
 apt full-upgrade -y && apt install -f && apt-get clean
 
 # Suppression des applications
 apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
-
 
 # Installation des applications complémentaires
 apt install exfat-utils hplip hplip-gui gksu feh yad -y
