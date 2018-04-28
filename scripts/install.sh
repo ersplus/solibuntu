@@ -54,7 +54,7 @@ useradd -m gestionnaire
 echo -e "AdminAsso\nAdminAsso" | passwd gestionnaire
 usermod -c "Gestionnaire Solibuntu" gestionnaire
 
-# Modification du compte administrateur Soibuntu
+# Modification du compte administrateur Solibuntu
 echo "Création des utilisateurs"
 echo "Modification du compte administtrateur"
 # La modification du compte administrateur ne peut se faire dans la session administrateur
@@ -79,7 +79,7 @@ apt full-upgrade -y && apt install -f && apt-get clean
 # Suppression des applications
 apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
 # Les jeux
-apt remove sgt-launcher sgt-puzzles gnome-sudoku gnome-mine -y
+apt remove sgt-launcher sgt-puzzles gnome-sudoku gnome-mines -y
 
 # Chrome n'est plus le navigateur de Solibuntu
 
