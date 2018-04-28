@@ -73,22 +73,25 @@ done < /opt/borne/share/setselection.txt
 #-------------------------------------------------------
 
 echo "Installation logicielle"
+apt update
 apt full-upgrade -y && apt install -f && apt-get clean
 
 # Suppression des applications
 apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
 
+# Chrome n'est plus le navigateur de Solibuntu
+
 # Installation des applications complémentaires
-apt install exfat-utils hplip hplip-gui gksu feh yad -y
+apt install exfat-utils gksu feh yad -y
 
+# Installation des polices complémentaires
 apt install -y gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree ttf-alee ttf-ancient-fonts ttf-arabeyes fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp ttf-atarismall fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip cups-pdf exfat-utils chromium-browser imagemagick xsane
+
+# Installation de l'imprimante
 apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr 
-apt-get install -y gdebi.\ins	
 
-# Pour installer le greffon sans installer l'imprimante
-# a automatiser
-
-#echo "d\ny\ny\n" | hp-plugin -i
+# Installation de Gdebi pour résoudre les dépendances de l'installation de CTparental
+apt-get install -y gdebi	
 
 #-------------------------------------------------------
 # Installation du filtrage
