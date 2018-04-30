@@ -15,9 +15,9 @@ getFirstID() {
             ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Nom de l'association")
             ret=$?
             if [ $ret -eq 0 ];then
-            nomAsso="`echo ${ans}`"
+                nomAsso="`echo ${ans}`"
                 mac="`getUniqID`"
-                echo "${nomAsso}_${mac}" > /roresult=`testMdp $user $pass`ot/.uniqID
+                echo "${nomAsso}_${mac}" > /root/.uniqID
                 chmod u=rx,go-rwx /root/.uniqID
             fi
         done
@@ -47,6 +47,7 @@ getDateTime() {
 getUniqID() {
     mac="`/sbin/ifconfig | grep enp | grep HWaddr | awk '{print $NF}' | sed -e 's/:/_/g'`"
     mac64=`echo "${mac}" | base64 -`
+    #nohup xterm &
     echo "${mac64}"
 }
 
@@ -137,7 +138,7 @@ testSecu() {
         # Le mot de passe n'est pas valide
         zinity --info --text "Password is not complex enough, it must contain at least: \n \
                             8 characters total, 1 uppercase, lowercase 1, number 1 \n \
-                            and one special character among the following : &éè~#{}()ç_@à?.;:/!,$<>=£%"
+                            and one special character among the following : &éè~#{}()ç_@à?.;:/\!,\$<>=£\%"
         return 1
     fi
 }
