@@ -107,9 +107,9 @@ while [ $ret -ne 0 ]
 			#fi
 			user="gestionnaire" 
 			pass=$(zenity --password)
-			#nohup xterm &
 			testMdp $user $pass
-			
+			#nohup xterm &
+
 			if [ $? == 0 ];then
 				$repinstallation/scripts/bmConfigborne.sh
 			elif [ $? == 1 ];then
