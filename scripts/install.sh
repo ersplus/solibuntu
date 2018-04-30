@@ -15,7 +15,7 @@ repinstallation="/opt/borne"
 cd /opt/
 wget https://github.com/ersplus/solibuntu/archive/Dev.zip
 unzip Dev.zip
-mv /opt/solibuntu-Dev /opt/borne
+mv /opt/solibuntu-Dev $repinstallation
 #cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
 chmod +x $repinstallation/scripts/*.sh
 
@@ -24,9 +24,13 @@ chmod +x $repinstallation/scripts/*.sh
 #-------------------------------------------------------
 
 echo "Installation et configuration de Solibuntu"
+
+# Ersplus : comprends pas cette ligne ?
+# manque la copie des fichiers avant non ? 
 chmod +rx /usr/share/xfpanel-switch/layouts/
-chmod +rx /opt/borne/scripts/bmGuestwrapper.sh
-chmod +rx /opt/borne/share/charte.html
+
+chmod +rx $repinstallation/scripts/bmGuestwrapper.sh
+chmod +rx $repinstallation/share/charte.html
 
 # Personnalisation Plymouth
 cd /usr/share/plymouth/themes/
@@ -120,11 +124,12 @@ cp $repinstallation/scripts/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/
 cp $repinstallation/scripts/lightdm.conf.d/* /etc/lightdm/lightdm.conf.d/
 
 #-------------------------------------------------------
-#  Écran de connexion de la session invité
+#  Configuration du navigateur
 #-------------------------------------------------------
-# Navigateur par défaut
-# xdg-settings set default-web-browser chromium-browser.desktop
-
+# Navigateur par défaut Firefox
+# Proxy, Gestion de l'historique, page de démarrage etc...
+xdg-settings set default-web-browser firefox-browser.desktop
+cp -r $repinstallation/firefox/sysprf.js /etc/firefox/syspref.js 
 
 echo "Fin de l'installation"
 
