@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #-------------------------------------------------------
-# Install filtrage + dépendances
+# Installation filtrage
 #-------------------------------------------------------
 installFiltrage() {
 	#sudo dpkg -i /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
