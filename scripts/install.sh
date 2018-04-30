@@ -56,7 +56,7 @@ usermod -c "Gestionnaire Solibuntu" gestionnaire
 
 # Modification du compte administrateur Solibuntu
 echo "Création des utilisateurs"
-echo "Modification du compte administtrateur"
+echo "Modification du compte administrateur"
 # La modification du compte administrateur ne peut se faire dans la session administrateur
 # usermod -c "Administrateur Solibuntu" administrateur
 
