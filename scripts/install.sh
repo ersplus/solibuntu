@@ -104,8 +104,8 @@ apt-get install -y gdebi
 echo "Installation du filtrage"
 
 # Reccuperation de la dernière version de CTParental
-# wget https://github.com/marsat/CTparental/releases/download/4.21.06d/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
-# mv ctparental_ubuntu16.04_4.21.06-1.0_all.deb $repinstallation/share/
+wget https://github.com/marsat/CTparental/releases/download/4.21.06d/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
+mv ctparental_ubuntu16.04_4.21.06-1.0_all.deb $repinstallation/share/
 cd $repinstallation/scripts
 ./filtrage_install.sh
 
