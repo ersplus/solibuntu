@@ -5,8 +5,8 @@
 #-------------------------------------------------------
 installFiltrage() {
 	#sudo dpkg -i /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
-	gdebi-gtk --auto-close /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
-	cp -rf /opt/borne/share/CTparental /usr/bin/CTparental
+	gdebi-gtk --auto-close /opt/borne/share/ctparental_debian9_ubuntu17xx_4.22.03-1.0_all.deb
+	#cp -rf /opt/borne/share/CTparental /usr/bin/CTparental
 }
 
 # ======================================================================
@@ -27,8 +27,8 @@ repinstallation="/opt/borne"
 	echo "40" ; sleep 1
 	echo "# Installation debconf-utils" ;  sudo apt-get install debconf-utils
 	echo "50" ; sleep 1
-	echo "# Installation des dépendances"; sudo apt-get install -y clamav clamav-base clamav-freshclam console-data dansguardian dnsmasq gamin iptables-persistent libclamav7 libgamin0 libllvm3.6v5 liblua5.1-0 libnss3-tools lighttpd lighttpd-mod-magnet netfilter-persistent php-cgi php-common php-xml php7.0-cgi php7.0-cli php7.0-common php7.0-json php7.0-opcache php7.0-readline php7.0-xml privoxy spawn-fcgi
-	echo "60" ; sleep 1
+	#echo "# Installation des dépendances"; sudo apt-get install -y clamav clamav-base clamav-freshclam console-data dansguardian dnsmasq gamin iptables-persistent libclamav7 libgamin0 libllvm3.6v5 liblua5.1-0 libnss3-tools lighttpd lighttpd-mod-magnet netfilter-persistent php-cgi php-common php-xml php7.0-cgi php7.0-cli php7.0-common php7.0-json php7.0-opcache php7.0-readline php7.0-xml privoxy spawn-fcgi
+	#echo "60" ; sleep 1
 	echo "# Installation filtrage"; installFiltrage
 	echo "70" ; sleep 1
 	echo "# Configuation du proxy" ; sudo cp -rf /opt/borne/share/proxy/defaulton /etc/chromium-browser/default
