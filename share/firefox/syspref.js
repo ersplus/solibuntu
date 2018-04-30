@@ -11,10 +11,10 @@ user_pref("browser.startup.homepage", "http://google.fr");
 //
 // Configuration du proxy
 //
-lockPref("network.proxy.http","address.of.proxy");
-lockPref("network.proxy.http_port",80);
-lockPref("network.proxy.ssl","address.of.proxy");
-lockPref("network.proxy.ssl_port",80);
+lockPref("network.proxy.http","127.0.0.1");
+lockPref("network.proxy.http_port",8080);
+lockPref("network.proxy.ssl","127.0.0.1");
+lockPref("network.proxy.ssl_port",8080);
 lockPref("network.proxy.type",1);
 lockPref("network.proxy.share_proxy_settings", true)
 //
