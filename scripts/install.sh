@@ -13,7 +13,7 @@ repinstallation="/opt/borne"
 #-------------------------------------------------------
 
 cd /opt/
-wget hhttps://github.com/ersplus/solibuntu/archive/Dev.zip
+wget https://github.com/ersplus/solibuntu/archive/Dev.zip
 unzip Dev.zip
 mv /opt/solibuntu-Dev /opt/borne
 #cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
