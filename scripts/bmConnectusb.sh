@@ -74,7 +74,7 @@ pointX="0"
 pointY=$(echo $((($hauteurEcran-300)/1)))
 
 nohup feh -ZFx /opt/borne/share/background.png &
-nohup xterm &
+#nohup xterm &
 # On fixe la valeur de ret pour la boucle
 ret=2
 
