@@ -64,19 +64,17 @@ xsetroot -cursor_name left_ptr&
 # Creation de l'identifiant unique lors de la premiere mise en route de la borne
 getFirstID
 
-
 # largeur de l'écran
 largeurEcran=$(xwininfo -root | awk '$1=="Width:" {print $2}')
 
 # Hauteur de l'écran
 hauteurEcran=$(xwininfo -root | awk '$1=="Height:" {print $2}')
-
 #pointX=$(echo $((($largeurEcran-500)/2)))
 pointX="0"
 pointY=$(echo $((($hauteurEcran-300)/1)))
 
 nohup feh -ZFx /opt/borne/share/background.png &
-
+nohup xterm &
 # On fixe la valeur de ret pour la boucle
 ret=2
 
