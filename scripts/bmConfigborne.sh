@@ -80,6 +80,8 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 	rm /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
 	pkill bmGreeter.sh
 	pkill lightdm
+	pkill feh
+	nohup xterm &
 	;;
 	"Créer une clé USB|")	
 	# Message pour l'utilisateur

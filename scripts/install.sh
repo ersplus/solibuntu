@@ -129,7 +129,7 @@ cp $repinstallation/scripts/lightdm.conf.d/* /etc/lightdm/lightdm.conf.d/
 # Navigateur par défaut Firefox
 # Proxy, Gestion de l'historique, page de démarrage etc...
 xdg-settings set default-web-browser firefox-browser.desktop
-cp -r $repinstallation/share/firefox/sysprf.js /etc/firefox/syspref.js 
+cp -r $repinstallation/share/firefox/syspref.js /etc/firefox/syspref.js 
 
 echo "Fin de l'installation"
 
