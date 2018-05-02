@@ -135,7 +135,7 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 						if [ $? == 0 ] ; then
 							echo -e "$pass\n$pass" | passwd gestionnaire
 							# Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
-							/usr/bin/CTparental -setadmin gestionnaire $pass
+							#CTparental -setadmin gestionnaire $pass
 							zenity --info --text="Le mot de passe a été modifié avec succès"
 						fi
 					else
