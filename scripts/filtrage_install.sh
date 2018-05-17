@@ -31,7 +31,7 @@ repinstallation="/opt/borne"
 	#echo "60" ; sleep 1
 	echo "# Installation filtrage"; installFiltrage
 	echo "70" ; sleep 1
-	echo "# Configuation du proxy" ; sudo cp -rf /opt/borne/share/proxy/defaulton /etc/chromium-browser/default
+	#echo "# Configuation du proxy" ; sudo cp -rf /opt/borne/share/proxy/defaulton /etc/chromium-browser/default
 	echo "80" ; sleep 1
 	echo "# Fin de l'installation" ;
 	echo "99" ; sleep 1

@@ -79,7 +79,8 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 	rm /etc/lightdm/lightdm.conf.d/50-auto-guest.conf
 	rm /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
 	pkill bmGreeter.sh
-	pkill lightdm
+	service lightdm restart
+	#nohup xterm &
 	;;
 	"Créer une clé USB|")	
 	# Message pour l'utilisateur
@@ -134,7 +135,7 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 						if [ $? == 0 ] ; then
 							echo -e "$pass\n$pass" | passwd gestionnaire
 							# Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
-							/usr/bin/CTparental -setadmin gestionnaire $pass
+							#CTparental -setadmin gestionnaire $pass
 							zenity --info --text="Le mot de passe a été modifié avec succès"
 						fi
 					else
