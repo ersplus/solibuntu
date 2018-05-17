@@ -13,7 +13,12 @@ repinstallation="/opt/borne"
 #-------------------------------------------------------
 
 cd /opt/
+# Check branche dev
 wget https://github.com/ersplus/solibuntu/archive/Dev.zip
+
+#check branche master 
+# wget https://github.com/ersplus/solibuntu/archive/master.zip
+
 unzip Dev.zip
 mv /opt/solibuntu-Dev $repinstallation
 #cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
@@ -25,10 +30,7 @@ chmod +x $repinstallation/scripts/*.sh
 
 echo "Installation et configuration de Solibuntu"
 
-# Ersplus : comprends pas cette ligne ?
-# manque la copie des fichiers avant non ? 
-chmod +rx /usr/share/xfpanel-switch/layouts/
-
+# attribution exe
 chmod +rx $repinstallation/scripts/bmGuestwrapper.sh
 chmod +rx $repinstallation/share/charte.html
 
@@ -36,6 +38,23 @@ chmod +rx $repinstallation/share/charte.html
 cd /usr/share/plymouth/themes/
 tar -xvf $repinstallation/share/plymouth.tar.gz
 echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n ModuleName=script \n \n [script] \n ImageDir=/usr/share/plymouth/themes/solibuntu \n ScriptFile=/usr/share/plymouth/themes/solibuntu/solibuntu.script \n" > /usr/share/plymouth/themes/default.plymouth
+
+#-------------------------------------------------------
+# Copie profil de base dans Skel
+#-------------------------------------------------------
+
+# À FAIRE
+
+#-------------------------------------------------------
+# Création du compte gestionnaire
+#-------------------------------------------------------
+
+echo "Création des utilisateurs"
+
+# Ajout du compte gestionnaire Solibuntu
+useradd -m gestionnaire
+echo -e "AdminAsso\nAdminAsso" | passwd gestionnaire
+usermod -c "Gestionnaire Solibuntu" gestionnaire
 
 #-------------------------------------------------------
 # Autologin session Invité
@@ -49,25 +68,13 @@ ln -s /home/gestionnaire /etc/guest-session/skel
 cp -f $repinstallation/scripts/lightdm.conf.d/50-logout-restoreinvite.conf /etc/lightdm/lightdm.conf.d/50-logout-restoreinvite.conf
 cp -f $repinstallation/scripts/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
 
-#-------------------------------------------------------
-# Création du compte gestionnaire
-#-------------------------------------------------------
-
-echo "Création des utilisateurs"
-
-# Ajout du compte gestionnaire Solibuntu
-useradd -m gestionnaire
-echo -e "AdminAsso\nAdminAsso" | passwd gestionnaire
-usermod -c "Gestionnaire Solibuntu" gestionnaire
-
-# Modification du compte administrateur Solibuntu
-echo "Modification du compte administtrateur"
-# La modification du compte administrateur ne peut se faire dans la session administrateur
-# usermod -c "Administrateur Solibuntu" administrateur
 
 #-------------------------------------------------------
 # Configuration des paquets
 #-------------------------------------------------------
+
+# problématique des licences !!
+
 
 while read line; do
 	echo $line | debconf-set-selections
@@ -76,6 +83,8 @@ done < /opt/borne/share/setselection.txt
 #-------------------------------------------------------
 # Installation des logiciels
 #-------------------------------------------------------
+
+
 
 echo "Installation logicielle"
 apt-get update
@@ -104,6 +113,22 @@ dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'
 
 # hp-plugin -i
 
+#
+# Sudoers copy du fichier de configuration
+# /etc/sudoers
+#
+
+
+#
+# copie configuration feh
+# /etc/feh/* /opt/borne/share/feh
+#
+
+
+
+
+
+
 #-------------------------------------------------------
 # Installation du filtrage
 #-------------------------------------------------------
@@ -129,7 +154,7 @@ cp $repinstallation/scripts/lightdm.conf.d/* /etc/lightdm/lightdm.conf.d/
 # Navigateur par défaut Firefox
 # Proxy, Gestion de l'historique, page de démarrage etc...
 xdg-settings set default-web-browser firefox-browser.desktop
-cp -r $repinstallation/share/firefox/sysprf.js /etc/firefox/syspref.js 
+cp -r $repinstallation/share/firefox/syspref.js /etc/firefox/syspref.js 
 
 echo "Fin de l'installation"
 
