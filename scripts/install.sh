@@ -136,7 +136,6 @@ dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'
 echo "Installation du filtrage"
 
 # Reccuperation de la dernière version de CTParental
-wget https://github.com/marsat/CTparental/releases/download/4.22.03/ctparental_debian9_ubuntu17xx_4.22.03-1.0_all.deb -O $repinstallation/share/ctparental_debian9_ubuntu17xx_4.22.03-1.0_all.deb
 cd $repinstallation/scripts
 ./filtrage_install.sh
 
