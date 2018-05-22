@@ -14,15 +14,15 @@ repinstallation="/opt/borne"
 
 cd /opt/
 # Check branche dev
-wget https://github.com/ersplus/solibuntu/archive/Dev.zip
+#wget https://github.com/ersplus/solibuntu/archive/Dev.zip
 
 #check branche master 
 # wget https://github.com/ersplus/solibuntu/archive/master.zip
 
-unzip Dev.zip
-mv /opt/solibuntu-Dev $repinstallation
+#unzip Dev.zip
+#mv /opt/solibuntu-Dev $repinstallation
 #cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
-chmod +x $repinstallation/scripts/*.sh
+#chmod +x $repinstallation/scripts/*.sh
 
 #-------------------------------------------------------
 # Environnement Solibuntu
