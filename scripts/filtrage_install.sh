@@ -41,9 +41,9 @@ repinstallation="/opt/borne"
 	#  --text="Installation du filtrage..." \
 	#  --percentage=0
 
-	if [ "$?" = -1 ] ; then
-		zenity --error --text="Installation annulée."
-	fi
+	#if [ "$?" = -1 ] ; then
+	#	zenity --error --text="Installation annulée."
+	#fi
 exit 0
 
 
