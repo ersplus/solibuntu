@@ -5,7 +5,7 @@
 #-------------------------------------------------------
 installFiltrage() {
 	#sudo dpkg -i /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
-	gdebi-gtk --auto-close /opt/borne/share/ctparental_debian9_ubuntu17xx_4.22.03-1.0_all.deb
+	gdebi-gtk -n --auto-close /opt/borne/share/ctparental_debian9_ubuntu17xx_4.22.03-1.0_all.deb
 	#cp -rf /opt/borne/share/CTparental /usr/bin/CTparental
 }
 
@@ -35,11 +35,11 @@ repinstallation="/opt/borne"
 	echo "80" ; sleep 1
 	echo "# Fin de l'installation" ;
 	echo "99" ; sleep 1
-	) |
-	zenity --progress \
-	  --title="Progression de installation" \
-	  --text="Installation du filtrage..." \
-	  --percentage=0
+	) # |
+	#zenity --progress \
+	#  --title="Progression de installation" \
+	#  --text="Installation du filtrage..." \
+	#  --percentage=0
 
 	if [ "$?" = -1 ] ; then
 		zenity --error --text="Installation annulée."
