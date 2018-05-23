@@ -5,7 +5,7 @@
 #-------------------------------------------------------
 installFiltrage() {
 	#sudo dpkg -i /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
-	gdebi-gtk -n --auto-close /opt/borne/share/ctparental_debian9_ubuntu17xx_4.22.03-1.0_all.deb
+	gdebi-gtk -n --auto-close /opt/borne/share/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb
 	#cp -rf /opt/borne/share/CTparental /usr/bin/CTparental
 }
 
