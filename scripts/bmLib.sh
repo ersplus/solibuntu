@@ -31,7 +31,7 @@ getFirstID() {
                 zenity --info --width=300 --text "Votre ordinateur va redémarrer"
                 reboot
             else 
-                zenity --info --text "Le filtrage ne sera pas installé"
+                zenity --info --width=300 --text "Le filtrage n'a pas été installé"
             fi
         done
     fi
