@@ -135,9 +135,8 @@ dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'
 
 echo "Installation du filtrage"
 
-# Reccuperation de la dernière version de CTParental
-cd $repinstallation/scripts
-./filtrage_install.sh
+#cd $repinstallation/scripts
+#sudo ./filtrage_install.sh
 
 #-------------------------------------------------------
 #  Écran de connexion de la session invité

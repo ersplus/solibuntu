@@ -20,6 +20,17 @@ getFirstID() {
                 echo "${nomAsso}_${mac}" > /root/.uniqID
                 chmod u=rx,go-rwx /root/.uniqID
             fi
+            opt1="Oui"
+            opt2="Non"
+            filtrage=`zenity --list --radiolist --text 'Voulez-vous installer le filtrage ?' \
+            --column 'Sélectionner' --column 'Options' TRUE "$opt1" FALSE "$opt2"`
+            if [ $filtrage == "Oui" ] ; then
+                cd /opt/borne/scripts/
+                sudo ./filtrage_install.sh
+                zenity --info --text "Le filtrage a bien été installé"
+            else 
+                zenity --info --text "Le filtrage ne sera pas installé"
+            fi
         done
     fi
 }
