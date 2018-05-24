@@ -27,7 +27,8 @@ getFirstID() {
             if [ $filtrage == "Oui" ] ; then
                 cd /opt/borne/scripts/
                 sudo ./filtrage_install.sh
-                zenity --info --text "Le filtrage a bien été installé"
+                zenity --info --width=300 --text "Le filtrage a bien été installé"
+                reboot
             else 
                 zenity --info --text "Le filtrage ne sera pas installé"
             fi
