@@ -35,11 +35,11 @@ repinstallation="/opt/borne"
 	echo "80" ; sleep 1
 	echo "# Fin de l'installation" ;
 	echo "99" ; sleep 1
-	) # |
-	#zenity --progress \
-	#  --title="Progression de installation" \
-	#  --text="Installation du filtrage..." \
-	#  --percentage=0
+	)  |
+	zenity --progress \
+	  --title="Progression de installation" \
+	  --text="Installation du filtrage..." \
+	  --percentage=0
 
 	#if [ "$?" = -1 ] ; then
 	#	zenity --error --text="Installation annulée."
