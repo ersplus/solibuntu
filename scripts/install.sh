@@ -16,12 +16,59 @@ cd /opt/
 # Check branche dev
 wget https://github.com/bastlenoob/solibuntu/archive/Dev.zip
 
+#-------------------------------------------------------
+# Configuration des paquets
+#-------------------------------------------------------
+
+# problématique des licences !!
+
+while read line; do
+	echo $line | debconf-set-selections
+done < /opt/borne/share/setselection.txt
+
+if [ $? == 1 ] ; then
+	cp Solibuntu/solibuntu-Dev.zip .
+	unzip Dev.zip
+
+	apt-get install feh yad
+else
+
+	#-------------------------------------------------------
+	# Installation des logiciels
+	#-------------------------------------------------------
+
+	echo "Installation logicielle"
+	apt-get update
+	apt-get full-upgrade -y && apt install -f && apt-get clean
+
+	# Suppression des applications
+	apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
+
+	# Les jeux
+	apt remove sgt-launcher sgt-puzzles gnome-sudoku gnome-mines -y
+
+	# Installation des applications complémentaires
+	apt-get install -y exfat-utils feh yad imagemagick xsane
+
+	# Installation des polices complémentaires
+	apt-get install -y gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree fonts-alee ttf-ancient-fonts fonts-arabeyes fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp ttf-atarismall fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip printer-driver-cups-pdf exfat-utils chromium-browser imagemagick xsane
+
+	# Installation de l'imprimante
+	apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr 
+
+	# Installation de Gdebi pour résoudre les dépendances de l'installation de CTparental
+	apt-get install -y gdebi
+
+	# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
+	dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
+
+	# hp-plugin -i
+fi
 #check branche master 
 # wget https://github.com/ersplus/solibuntu/archive/master.zip
 
 unzip Dev.zip
 mv /opt/solibuntu-Dev $repinstallation
-cp -r /home/administrateur/Bureau/sf_solibuntu /opt/borne
 chmod +x $repinstallation/scripts/*.sh
 
 #-------------------------------------------------------
@@ -69,50 +116,6 @@ cp -f $repinstallation/scripts/lightdm.conf.d/50-logout-restoreinvite.conf /etc/
 cp -f $repinstallation/scripts/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
 
 
-#-------------------------------------------------------
-# Configuration des paquets
-#-------------------------------------------------------
-
-# problématique des licences !!
-
-
-while read line; do
-	echo $line | debconf-set-selections
-done < /opt/borne/share/setselection.txt
-
-#-------------------------------------------------------
-# Installation des logiciels
-#-------------------------------------------------------
-
-
-
-echo "Installation logicielle"
-apt-get update
-apt-get full-upgrade -y && apt install -f && apt-get clean
-
-# Suppression des applications
-apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
-
-# Les jeux
-apt remove sgt-launcher sgt-puzzles gnome-sudoku gnome-mines -y
-
-# Installation des applications complémentaires
-apt-get install -y exfat-utils feh yad imagemagick xsane
-
-# Installation des polices complémentaires
-apt-get install -y gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree fonts-alee ttf-ancient-fonts fonts-arabeyes fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp ttf-atarismall fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip printer-driver-cups-pdf exfat-utils chromium-browser imagemagick xsane
-
-# Installation de l'imprimante
-apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr 
-
-# Installation de Gdebi pour résoudre les dépendances de l'installation de CTparental
-apt-get install -y gdebi
-
-# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
-dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
-
-# hp-plugin -i
-
 #
 # Sudoers copy du fichier de configuration
 # /etc/sudoers
@@ -124,19 +127,6 @@ dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'
 # /etc/feh/* /opt/borne/share/feh
 #
 
-
-
-
-
-
-#-------------------------------------------------------
-# Installation du filtrage
-#-------------------------------------------------------
-
-echo "Installation du filtrage"
-
-#cd $repinstallation/scripts
-#sudo ./filtrage_install.sh
 
 #-------------------------------------------------------
 #  Écran de connexion de la session invité
