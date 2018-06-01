@@ -109,11 +109,56 @@ while [ $ret -ne 0 ]
 			#nohup xterm &
 
 			if [ $? == 0 ];then
+				if [ $pass == "AdminAsso" ] ; then
+					testMdp "administrateur" "AdminSolibuntu"
+					if [ $? == 0 ] ; then
+						zenity --info --text "Attention, les mots de passe du compte administrateur et du \
+						compte gestionnaire n'ont jamais été changés."
+					else
+						zenity --info --text "Attention, le mot de passe du compte gestionnaire n'a \
+						jamais été changé."
+					fi
+				fi
+				testMdp "administrateur" "AdminSolibuntu"
+				if [ $? == 0 ] ; then
+					zenity --info --text "Attention, les mots de passe du compte administrateur \
+					n'a jamais été changé, veuillez le lui signaler."
+				fi
 				$repinstallation/scripts/bmConfigborne.sh
 			elif [ $? == 1 ];then
 				user="administrateur"
 				testMdp $user $pass
 				if [ $? == 0 ];then
+
+					testMdp "gestionnaire" "AdminAsso"
+
+					if [ $? == 0 ]; then
+						if [ $pass == "AdminSolibuntu" ] ; then
+							zenity --question --text="Les mots de passe administrateur et gestionnaire sont \
+							toujours les mots de passe par défaut, désirez-vous les modifier ?" \
+							--ok-label "Oui" --cancel-label="Non"
+							if [ $? == 0 ] ; then
+								changerMdp "administrateur" "gestionnaire"
+							fi
+						else
+							zenity --question --text="Les mots de passe gestionnaire est \
+							toujours le mot de passe par défaut, désirez-vous le modifier ?" \
+							--ok-label "Oui" --cancel-label="Non"
+							if [ $? == 0 ] ; then
+								changerMdp "gestionnaire"
+							fi
+						fi
+					else
+						if [ $pass == "AdminSolibuntu" ] ; then
+							zenity --question --text="Les mots de passe administrateur est \
+							toujours le mot de passe par défaut, désirez-vous le modifier ?" \
+							--ok-label "Oui" --cancel-label="Non"
+							if [ $? == 0 ] ; then
+								changerMdp "administrateur"
+							fi
+						fi
+					fi
+
 					$user="gestionnaire"
 					$repinstallation/scripts/bmConfigborne.sh
 				fi

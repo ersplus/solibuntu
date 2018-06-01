@@ -107,7 +107,7 @@ apt-get install -y gdebi
 # Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
 dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
 
-	# hp-plugin -i
+# hp-plugin -i
 
 #
 # Sudoers copy du fichier de configuration

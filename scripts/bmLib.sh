@@ -149,10 +149,82 @@ testSecu() {
         return 0
     else
         # Le mot de passe n'est pas valide
-        zinity --info --text "Password is not complex enough, it must contain at least: \n \
-                            8 characters total, 1 uppercase, lowercase 1, number 1 \n \
-                            and one special character among the following : &éè~#{}()ç_@à?.;:/\!,\$<>=£\%"
+        #zinity --info --text "Password is not complex enough, it must contain at least: \n \
+        #                    8 characters total, 1 uppercase, lowercase 1, number 1 \n \
+        #                    and one special character among the following : &éè~#{}()ç_@à?.;:/\!,\$<>=£\%"
         return 1
+    fi
+}
+
+changerMdp() {
+    if [ $# == 2 ] ; then
+        entr=`zenity --forms \
+        --title="Changement du mot de passe" \
+        --text="Définir un nouveau mot de passe administrateur + gestionnaire" \
+        --add-password="Nouveau mot de passe administrateur" \
+        --add-password="Confirmer le mot de passe" \
+        --add-password="Nouveau mot de passe gestionnaire" \
+        --add-password="Confirmer le mot de passe" \
+        --separator="|"`
+                            
+        if [ $? == 0 ]; then
+            passAdmin=`echo $entr | cut -d'|' -f1`
+            passVerifAdmin=`echo $entr | cut -d'|' -f2`
+            passGest=`echo $entr | cut -d'|' -f3`
+            passVerifGest=`echo $entr | cut -d'|' -f4`
+            if [ $passAdmin == $passVerifAdmin ] && [ passGest == passVerifGest ]; then
+                testSecu $passAdmin
+                if [ 0 == 0 ]; then
+                    testSecu $passGest
+                    if [ 0 == 0 ]; then
+                        zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
+                        if [ $? == 0 ] ; then
+                            echo -e "$passGest\n$passGest" | passwd gestionnaire
+                            echo -e "$passAdmin\n$passAdmin" | passwd administrateur
+                            CTparental -setadmin administrateur $passAdmin
+                            # Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
+                            #CTparental -setadmin gestionnaire $pass
+                            zenity --info --text="Les mots de passe ont été modifiés avec succès"
+                        fi
+                    else
+                        zenity --info --text="Le mot de passe gestionnaire n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                    fi
+                else
+                    zenity --info --text="Le mot de passe administrateur n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                fi
+            else
+                zenity --info --text="Les mots de passe doivent être identiques !"
+            fi
+        fi
+    elif [ $# == 1 ]; then
+        entr=`zenity --forms \
+        --title="Changement du mot de passe" \
+        --text="Définir un nouveau mot de passe $1" \
+        --add-password="Nouveau mot de passe $1" \
+        --add-password="Confirmer le mot de passe" \
+        --separator="|"`
+
+        if [ $? == 0 ]; then
+            pass=`echo $entr | cut -d'|' -f1`
+            passVerif=`echo $entr | cut -d'|' -f2`
+            if [ $pass == $passVerif ] ; then
+                testSecu $pass
+                if [ 0 == 0 ]; then
+                    zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
+                    if [ $? == 0 ] ; then
+                        echo -e "$pass\n$pass" | passwd $1
+                        if [ $1 == "administrateur" ] ; then
+                            CTparental -setadmin administrateur $pass
+                        fi
+                        zenity --info --text="Les mots de passe ont été modifiés avec succès"
+                    fi
+                else
+                    zenity --info --text="Le mot de passe $1 n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                fi
+            else
+                zenity --info --text="Les mots de passe doivent être identiques !"
+            fi
+        fi
     fi
 }
 
