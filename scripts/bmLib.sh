@@ -172,7 +172,7 @@ changerMdp() {
             passVerifAdmin=`echo $entr | cut -d'|' -f2`
             passGest=`echo $entr | cut -d'|' -f3`
             passVerifGest=`echo $entr | cut -d'|' -f4`
-            if [ $passAdmin == $passVerifAdmin ] && [ passGest == passVerifGest ]; then
+            if [ $passAdmin == $passVerifAdmin ] && [ $passGest == $passVerifGest ]; then
                 testSecu $passAdmin
                 if [ 0 == 0 ]; then
                     testSecu $passGest
