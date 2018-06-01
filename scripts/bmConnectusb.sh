@@ -113,16 +113,17 @@ while [ $ret -ne 0 ]
 					testMdp "administrateur" "AdminSolibuntu"
 					if [ $? == 0 ] ; then
 						zenity --info --text "Attention, les mots de passe du compte administrateur et du \
-						compte gestionnaire n'ont jamais été changés."
+						compte gestionnaire n'ont jamais été changés. Veuillez le signaler."
 					else
 						zenity --info --text "Attention, le mot de passe du compte gestionnaire n'a \
-						jamais été changé."
+						jamais été changé. Veuillez le signaler."
 					fi
-				fi
-				testMdp "administrateur" "AdminSolibuntu"
-				if [ $? == 0 ] ; then
-					zenity --info --text "Attention, les mots de passe du compte administrateur \
-					n'a jamais été changé, veuillez le lui signaler."
+				else
+					testMdp "administrateur" "AdminSolibuntu"
+					if [ $? == 0 ] ; then
+						zenity --info --text "Attention, le mot de passe du compte administrateur n'a \
+						jamais été changé. Veuillez le signaler."
+					fi
 				fi
 				$repinstallation/scripts/bmConfigborne.sh
 			elif [ $? == 1 ];then
@@ -141,7 +142,7 @@ while [ $ret -ne 0 ]
 								changerMdp "administrateur" "gestionnaire"
 							fi
 						else
-							zenity --question --text="Les mots de passe gestionnaire est \
+							zenity --question --text="Le mot de passe gestionnaire est \
 							toujours le mot de passe par défaut, désirez-vous le modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
@@ -150,7 +151,7 @@ while [ $ret -ne 0 ]
 						fi
 					else
 						if [ $pass == "AdminSolibuntu" ] ; then
-							zenity --question --text="Les mots de passe administrateur est \
+							zenity --question --text="Le mot de passe administrateur est \
 							toujours le mot de passe par défaut, désirez-vous le modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
