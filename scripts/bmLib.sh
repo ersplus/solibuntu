@@ -20,8 +20,14 @@ getFirstID() {
                 echo "${nomAsso}_${mac}" > /root/.uniqID
                 chmod u=rx,go-rwx /root/.uniqID
             fi
-            opt1="Oui"
-            opt2="Non"
+
+            zenity --question --text="Les mots de passe administrateur et gestionnaire sont \
+            définis par défaut, désirez-vous les modifier ?" \
+            --ok-label "Oui" --cancel-label="Non"
+            if [ $? == 0 ] ; then
+                changerMdp "administrateur" "gestionnaire"
+            fi
+
             zenity --question --text 'Voulez-vous installer le filtrage ?' \
             --ok-label "Oui" --cancel-label="Non"
             if [ $? == 0 ] ; then
