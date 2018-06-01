@@ -22,16 +22,18 @@ getFirstID() {
             fi
             opt1="Oui"
             opt2="Non"
-            filtrage=`zenity --list --radiolist --text 'Voulez-vous installer le filtrage ?' \
-            --column 'Sélectionner' --column 'Options' TRUE "$opt1" FALSE "$opt2"`
-            if [ $filtrage == "Oui" ] ; then
+            zenity --question --text 'Voulez-vous installer le filtrage ?' \
+            --ok-label "Oui" --cancel-label="Non"
+            if [ $? == 0 ] ; then
                 cd /opt/borne/scripts/
                 sudo ./filtrage_install.sh
-                zenity --info --width=300 --text "Le filtrage a bien été installé \n Votre ordinateur va redémarrer"
+                zenity --info --width=300 --text "Le filtrage a bien été installé \n \
+                Votre ordinateur va redémarrer"
                 #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
                 reboot
             else 
-                zenity --info --width=300 --text "Le filtrage n'a pas été installé"
+                zenity --info --width=300 --text "Le filtrage n'a pas été installé \n \
+                Votre système va redémarrer."
             fi
         done
     fi
