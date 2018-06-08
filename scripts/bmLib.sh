@@ -40,6 +40,7 @@ getFirstID() {
             else 
                 zenity --info --width=300 --text "Le filtrage n'a pas été installé \n \
                 Votre système va redémarrer."
+                reboot
             fi
         done
     fi

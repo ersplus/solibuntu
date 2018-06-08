@@ -149,3 +149,6 @@ ttf-mscorefonts-installer	msttcorefonts/dldir	string
 printer-driver-pnm2ppa	pnm2ppa/use_debconf	boolean	true
 printer-driver-pnm2ppa	pnm2ppa/create_magicfilter	boolean	false
 printer-driver-pnm2ppa	pnm2ppa/printer_model	select	710
+cups-bsd	cups-bsd/setuplpd	boolean	false
+cups	cupsys/raw-print	boolean	true
+cups	cupsys/backend	multiselect	lpd, socket, usb, snmp, dnssd
