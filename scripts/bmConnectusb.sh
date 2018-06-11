@@ -125,7 +125,7 @@ while [ $ret -ne 0 ]
 						jamais été changé. Veuillez le signaler."
 					fi
 				fi
-				$repinstallation/scripts/bmConfigborne.sh
+				$repinstallation/scripts/bmConfigborne.sh "gestionnaire"
 			elif [ $? == 1 ];then
 				user="administrateur"
 				testMdp $user $pass
@@ -161,7 +161,7 @@ while [ $ret -ne 0 ]
 					fi
 
 					$user="gestionnaire"
-					$repinstallation/scripts/bmConfigborne.sh
+					$repinstallation/scripts/bmConfigborne.sh "administrateur"
 				fi
 			fi
 			;;
