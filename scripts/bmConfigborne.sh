@@ -43,7 +43,7 @@ if [ $1 == "gestionnaire" ] ; then
 			false "Configurer l'ordinateur" \
 			false "Créer une clé USB")
 
-elif [ $1 == "administrateur" ] :
+elif [ $1 == "administrateur" ] ; then
 	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
 			--image=info --image-on-top \
