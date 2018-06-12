@@ -91,7 +91,9 @@ if [ $? == 0 ] ; then
 
 	echo "Installation logicielle"
 	apt-get update
-	apt-get full-upgrade -y && apt install -f && apt-get clean
+	if [ $1 != "iso" ] ; then
+		apt-get full-upgrade -y && apt install -f && apt-get clean
+	fi
 
 	# Suppression des applications
 	apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
@@ -113,7 +115,9 @@ if [ $? == 0 ] ; then
 	apt-get install -y gdebi
 
 	# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
-	#dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
+	if [ $1 != "iso" ] ; then
+		dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
+	fi
 
 	# hp-plugin -i
 
