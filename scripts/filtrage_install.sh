@@ -4,7 +4,7 @@
 # Installation filtrage
 #-------------------------------------------------------
 installFiltrage() {
-	wget https://github.com/marsat/CTparental/releases/download/4.22.07e/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb -O /opt/borne/share/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb
+	wget wget https://gitlab.com/marsat/CTparental/uploads/53e32309e587aa7d61447d9f9adc9981/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb -O /opt/borne/share/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb
 	#sudo dpkg -i /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
 	gdebi-gtk -n --auto-close /opt/borne/share/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb
 	#cp -rf /opt/borne/share/CTparental /usr/bin/CTparental
