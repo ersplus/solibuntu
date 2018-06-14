@@ -140,9 +140,9 @@ ctparental	ctparental/erreurinternet	error
 ctparental	ctparental/httppassword_trop_simple	error	
 ctparental	ctparental/httppassword_non_ident	error	
 ctparental	ctparental/httplogin	string	administrateur
-ttf-mscorefonts-installer	msttcorefonts/dlurl	string	
 ttf-mscorefonts-installer	msttcorefonts/baddldir	error	
 ttf-mscorefonts-installer	msttcorefonts/accepted-mscorefonts-eula	boolean	true
 ttf-mscorefonts-installer	msttcorefonts/error-mscorefonts-eula	error	
 ttf-mscorefonts-installer	msttcorefonts/present-mscorefonts-eula	note	
-ttf-mscorefonts-installer	msttcorefonts/dldir	string
+ttf-mscorefonts-installer	msttcorefonts/dlurl	string	
+ttf-mscorefonts-installer	msttcorefonts/dldir	string	
