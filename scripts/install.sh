@@ -14,7 +14,7 @@ repinstallation="/opt/borne"
 
 cd /opt/
 # Check branche dev
-wget https://github.com/bastlenoob/solibuntu/archive/Dev.zip
+#wget https://github.com/bastlenoob/solibuntu/archive/Dev.zip
 
 #if [ $1 == "iso" ] ; then
 	#useradd -m administrateur
@@ -109,7 +109,6 @@ if [ $? == 0 ] ; then
 
 	# Installation de l'imprimante
 	apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr
-	bash apt-get install printer-driver-cups-pdf &
 
 	# Installation de Gdebi pour résoudre les dépendances de l'installation de CTparental
 	apt-get install -y gdebi
@@ -117,6 +116,7 @@ if [ $? == 0 ] ; then
 	# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
 	if [ $1 != "iso" ] ; then
 		dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
+		apt-get install printer-driver-cups-pdf
 	fi
 
 	# hp-plugin -i
