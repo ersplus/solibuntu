@@ -54,6 +54,7 @@ elif [ $1 == "administrateur" ] ; then
 			false "Redémarrer l'ordinateur" \
 			false "Mettre à jour et redémarrer" \
 			false "Configurer l'ordinateur" \
+			false "Installer le filtrage" \
 			false "Créer une clé USB" \
 			false "Modifier mot de passe gestionnaire")
 fi
@@ -98,6 +99,11 @@ fi
 	service lightdm restart
 	#nohup xterm &
 	;;
+
+	"Installer le filtrage|")
+	/opt/borne/scripts/filtrage_install.sh
+	;;
+
 	"Créer une clé USB|")	
 	# Message pour l'utilisateur
 	yad --text="Veuillez connecter la clé USB que vous désirez associer à cet ordinateur pour pouvoir le dévérrouiller.\n\n Cliquez sur <b>Suivant</b>." --form --buttons-layout=edge --button="Annuler":1 --button="Suivant":0
