@@ -14,7 +14,7 @@ repinstallation="/opt/borne"
 
 cd /opt/
 # Check branche dev
-wget https://github.com/bastlenoob/solibuntu/archive/Dev.zip
+wget https://github.com/ersplus/solibuntu/archive/Dev.zip
 
 #if [ $1 == "iso" ] ; then
 	#useradd -m administrateur
