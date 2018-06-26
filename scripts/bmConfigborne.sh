@@ -77,6 +77,7 @@ fi
 	echo "60" ; sleep 1
 	echo "# Maj Solibuntu"
 	echo "90" ; /opt/borne/scripts/install.sh
+	nohup xterm &
 	echo "# Mise à jour" ; apt autoremove --purge -y
 	echo "95" ; sleep 1
 	echo "# Redémarrage du système" ; reboot
