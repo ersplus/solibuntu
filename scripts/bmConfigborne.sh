@@ -31,18 +31,32 @@ hauteurEcran=$(xwininfo -root | awk '$1=="Height:" {print $2}')
 # Ecran configuration
 # ======================================================================
 
-reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
-		--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
-		--image=info --image-on-top \
-		--list --radiolist --no-headers \
-		--column 1 --column 2 --print-column=2 \
-		--margins="400" \
-		true  "Arrêter l'ordinateur" \
-		false "Redémarrer l'ordinateur" \
-		false "Mettre à jour et redémarrer" \
-		false "Configurer l'ordinateur" \
-		false "Créer une clé USB" \
-		false "Modifier mot de passe gestionnaire")
+if [ $1 == "gestionnaire" ] ; then
+	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
+			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
+			--image=info --image-on-top \
+			--list --radiolist --no-headers \
+			--column 1 --column 2 --print-column=2 \
+			--margins="400" \
+			true  "Arrêter l'ordinateur" \
+			false "Redémarrer l'ordinateur" \
+			false "Configurer l'ordinateur" \
+			false "Créer une clé USB")
+
+elif [ $1 == "administrateur" ] ; then
+	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
+			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
+			--image=info --image-on-top \
+			--list --radiolist --no-headers \
+			--column 1 --column 2 --print-column=2 \
+			--margins="400" \
+			true  "Arrêter l'ordinateur" \
+			false "Redémarrer l'ordinateur" \
+			false "Mettre à jour et redémarrer" \
+			false "Configurer l'ordinateur" \
+			false "Créer une clé USB" \
+			false "Modifier mot de passe gestionnaire")
+fi
 
   case ${reponse} in
 	"Arrêter l'ordinateur|")
@@ -54,15 +68,17 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 	"Mettre à jour et redémarrer|")
 	(
 	echo "10" ; sleep 1
-	echo "# Vérification des mises à jour" ; sudo apt update
+	echo "# Vérification des mises à jour" ; apt update
 	echo "20" ; sleep 1
-	echo "# Application des mises à jour" ; sudo apt full-upgrade -y
+	echo "# Application des mises à jour" ; apt full-upgrade -y
 	echo "40" ; sleep 1
-	echo "# Mise à jour" ; sudo apt install -f
+	echo "# Mise à jour" ; apt install -f
 	echo "60" ; sleep 1
-	echo "# Mise à jour" ; sudo apt autoremove --purge -y
-	echo "80" ; sleep 1
-	echo "# Redémarrage du système" ; sudo reboot
+	echo "# Maj Solibuntu"
+	echo "90" ; /opt/borne/scripts/install.sh
+	echo "# Mise à jour" ; apt autoremove --purge -y
+	echo "95" ; sleep 1
+	echo "# Redémarrage du système" ; reboot
 	echo "99" ; sleep 1
 	) |
 	zenity --progress \
