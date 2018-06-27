@@ -80,7 +80,6 @@ fi
 	rm -rf /opt/borne
 	/Solibuntu/install.sh
 	cp /opt/borne/scripts/install.sh /Solibuntu/install.sh
-	nohup xterm &
 	echo "# Mise à jour" ; apt autoremove --purge -y
 	echo "95" ; sleep 1
 	echo "# Redémarrage du système" ; reboot
