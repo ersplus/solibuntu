@@ -33,9 +33,13 @@ getFirstID() {
             if [ $? == 0 ] ; then
                 cd /opt/borne/scripts/
                 sudo ./filtrage_install.sh
-                zenity --info --width=300 --text "Le filtrage a bien été installé \n \
-                Votre ordinateur va redémarrer"
-                #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
+                if [ $? == 0 ] ; then
+                    zenity --info --width=300 --text "Le filtrage a bien été installé \n \
+                    Votre ordinateur va redémarrer"
+                    #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
+                else
+                    zenity --info --width=300 --text "Une erreur s'est produite \n \
+                    Votre ordinateur va redémarrer"
                 reboot
             else 
                 zenity --info --width=300 --text "Le filtrage n'a pas été installé \n \
