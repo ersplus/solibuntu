@@ -76,7 +76,9 @@ fi
 	echo "# Mise à jour" ; apt install -f
 	echo "60" ; sleep 1
 	echo "# Maj Solibuntu"
-	echo "90" ; nohup bash < /Solibuntu/install.sh
+	echo "90" ; 
+	rm -rf /opt/borne
+	/Solibuntu/install.sh
 	cp /opt/borne/scripts/install.sh /Solibuntu/install.sh
 	nohup xterm &
 	echo "# Mise à jour" ; apt autoremove --purge -y
