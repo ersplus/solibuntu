@@ -153,7 +153,7 @@ if [ $? == 0 ] ; then
 	# voir Xavier pour docs
 	xdg-settings set default-web-browser firefox-browser.desktop
 	cp -r $repinstallation/share/firefox/syspref.js /etc/firefox/syspref.js 
-
+	cp /opt/borne/share/sudoers /etc/sudoers
 	echo "Fin de l'installation"
 fi
 exit 0
