@@ -103,7 +103,16 @@ fi
 	;;
 
 	"Installer le filtrage|")
-	/opt/borne/scripts/filtrage_install.sh
+		cd /opt/borne/scripts/
+        sudo ./filtrage_install.sh
+        if [ $? == 0 ] ; then
+            zenity --info --width=300 --text "Le filtrage a bien été installé \n \
+            Votre ordinateur va redémarrer"
+            #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
+        else
+            zenity --info --width=300 --text "Une erreur s'est produite \n \
+            Votre ordinateur va redémarrer"
+        reboot
 	;;
 
 	"Créer une clé USB|")	
