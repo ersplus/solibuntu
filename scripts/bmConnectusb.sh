@@ -131,7 +131,7 @@ while [ $ret -ne 0 ]
 					fi
 				fi
 				# Appel le script du panneau de configuration en indiquant le compte gestionnaire
-				$repinstallation/scripts/bmConfigborne.sh "gestionnaire"
+				$repinstallation/scripts/bmConfigborne.sh gestionnaire
 			elif [ $? == 1 ];then
 				# Teste si le mot de passe est celui du compte administrateur
 				user="administrateur"
@@ -177,7 +177,7 @@ while [ $ret -ne 0 ]
 						fi
 					fi
 					# Appel le script du panneau de configuration en indiquant le compte administrateur
-					$repinstallation/scripts/bmConfigborne.sh "administrateur"
+					$repinstallation/scripts/bmConfigborne.sh administrateur
 				fi
 			fi
 			;;
