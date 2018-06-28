@@ -40,6 +40,7 @@ getFirstID() {
                 else
                     zenity --info --width=300 --text "Une erreur s'est produite \n \
                     Votre ordinateur va redémarrer"
+                fi
                 reboot
             else 
                 zenity --info --width=300 --text "Le filtrage n'a pas été installé \n \
