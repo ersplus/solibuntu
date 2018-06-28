@@ -57,6 +57,7 @@ elif [ $1 == "administrateur" ] ; then
 			false "Installer le filtrage" \
 			false "Créer une clé USB" \
 			false "Modifier mot de passe gestionnaire")
+
 fi
 
   case ${reponse} in
@@ -113,6 +114,7 @@ fi
         else
             zenity --info --width=300 --text "Une erreur s'est produite \n \
             Votre ordinateur va redémarrer"
+        fi
         reboot
 	;;
 
