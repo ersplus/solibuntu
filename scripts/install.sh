@@ -24,10 +24,11 @@ wget https://github.com/ersplus/solibuntu/archive/Dev.zip
 if [ $? == 0 ] ; then
 	#check branche master 
 	# wget https://github.com/ersplus/solibuntu/archive/master.zip
-
+	rm -rf /opt/borne
 	unzip Dev.zip
 	mv /opt/solibuntu-Dev $repinstallation
 	chmod +x $repinstallation/scripts/*.sh
+	rm Dev.zip
 
 	#-------------------------------------------------------
 	# Environnement Solibuntu
@@ -153,7 +154,21 @@ if [ $? == 0 ] ; then
 	# voir Xavier pour docs
 	xdg-settings set default-web-browser firefox-browser.desktop
 	cp -r $repinstallation/share/firefox/syspref.js /etc/firefox/syspref.js 
-	cp /opt/borne/share/sudoers /etc/sudoers
+	
+	#-------------------------------------------------------
+	#  Configuration fichier sudoers
+	#-------------------------------------------------------
+
+	# Création fichier backup
+	cp /opt/borne/share/sudoers /tmp/sudoers.bak
+	
+	visudo -cf /tmp/sudoers.bak
+
+	if [ $? == 0 ] ; then
+		cp /tmp/sudoers.bak /etc/sudoers
+	else
+		echo "Impossible de modifier le fichier sudoers"
+	fi
 	
 	echo "Fin de l'installation"
 fi
