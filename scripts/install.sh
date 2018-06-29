@@ -173,7 +173,7 @@ if [ $? == 0 ] ; then
 	#-------------------------------------------------------
 	#  Configuration profil administrateur
 	#-------------------------------------------------------
-	cd /home/administrateur
+	cd ~
 	rm -rf .config/
 	cp /opt/borne/share/config.tar.gz .
 	tar -xvzf config.tar.gz
