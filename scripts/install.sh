@@ -169,7 +169,16 @@ if [ $? == 0 ] ; then
 	else
 		echo "Impossible de modifier le fichier sudoers"
 	fi
-	
+
+	#-------------------------------------------------------
+	#  Configuration profil administrateur
+	#-------------------------------------------------------
+	cd ~
+	rm -rf .config/
+	cp /opt/borne/share/config.tar.gz .
+	tar -xvzf config.tar.gz
+	rm config.tar.gz
+
 	echo "Fin de l'installation"
 fi
 exit 0
