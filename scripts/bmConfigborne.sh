@@ -12,9 +12,6 @@ repinstallation="/opt/borne"
 [ ! -f $repinstallation/scripts/bmLib.sh ] && logger -p local0.crit 'Impossible de trouver la bibliothèque standard. Abandon.' && exit 1
 . $repinstallation/scripts/bmLib.sh
 
-#[ ! -f /usr/bin/CTparental ] && logger -p local0.crit 'Impossible de trouver la bibliothèque CTparental. Abandon.' && exit 1
-#. /usr/bin/CTparental
-
 # ======================================================================
 # Script de gestion du mode de filtrage
 # ======================================================================
@@ -31,6 +28,7 @@ hauteurEcran=$(xwininfo -root | awk '$1=="Height:" {print $2}')
 # Ecran configuration
 # ======================================================================
 
+# Choix gestionnaire
 if [ $1 == "gestionnaire" ] ; then
 	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
@@ -43,6 +41,7 @@ if [ $1 == "gestionnaire" ] ; then
 			false "Configurer l'ordinateur" \
 			false "Créer une clé USB")
 
+# Choix administrateur
 elif [ $1 == "administrateur" ] ; then
 	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
@@ -62,9 +61,11 @@ fi
 
   case ${reponse} in
 	"Arrêter l'ordinateur|")
+	# Arrête l'ordinateur
 	sudo halt
 	;;
 	"Redémarrer l'ordinateur|")
+	# Redémarre l'ordinateur
 	sudo reboot
 	;;
 	"Mettre à jour et redémarrer|")
@@ -78,8 +79,10 @@ fi
 	echo "60" ; sleep 1
 	echo "# Maj Solibuntu"
 	echo "90" ;
+		# Lance le script d'installation
 		cd /Solibuntu
 		./install.sh installation
+		# Copie le nouveau script téléchargé dans le dossier Solibuntu
 		cp /opt/borne/scripts/install.sh /Solibuntu/install.sh
 	echo "# Mise à jour" ; apt autoremove --purge -y
 	echo "95" ; sleep 1
@@ -105,6 +108,7 @@ fi
 	;;
 
 	"Installer le filtrage|")
+		# Lance le script d'installation du filtrage
 		cd /opt/borne/scripts/
         sudo ./filtrage_install.sh
         if [ $? == 0 ] ; then
@@ -152,6 +156,7 @@ fi
 	ret=2
 	;;
 	"Modifier les mots de passe|")
+		# Appel la fonction de changement des mots de passe
 		changerMdp "administrateur" "gestionnaire"
 	;;
   esac
