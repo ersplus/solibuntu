@@ -193,9 +193,13 @@ changerMdp() {
                     if [ 0 == 0 ]; then
                         zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
                         if [ $? == 0 ] ; then
-                            echo -e "$passGest\n$passGest" | passwd gestionnaire
-                            echo -e "$passAdmin\n$passAdmin" | passwd administrateur
-                            CTparental -setadmin administrateur $passAdmin
+                            if [ $passGest != "" ] ; then
+                                echo -e "$passGest\n$passGest" | passwd gestionnaire
+                            fi
+                            if [ $passAdmin != "" ] ; then
+                                echo -e "$passAdmin\n$passAdmin" | passwd administrateur
+                                CTparental -setadmin administrateur $passAdmin
+                            fi
                             # Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
                             #CTparental -setadmin gestionnaire $pass
                             zenity --info --text="Les mots de passe ont été modifiés avec succès"
@@ -226,11 +230,13 @@ changerMdp() {
                 if [ 0 == 0 ]; then
                     zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
                     if [ $? == 0 ] ; then
-                        echo -e "$pass\n$pass" | passwd $1
-                        if [ $1 == "administrateur" ] ; then
-                            CTparental -setadmin administrateur $pass
+                        if [ $pass != "" ] ; then
+                            echo -e "$pass\n$pass" | passwd $1
+                            if [ $1 == "administrateur" ] ; then
+                                CTparental -setadmin administrateur $pass
+                            fi
+                            zenity --info --text="Le mot de passe $1 a été modifié avec succès"
                         fi
-                        zenity --info --text="Les mots de passe ont été modifiés avec succès"
                     fi
                 else
                     zenity --info --text="Le mot de passe $1 n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"

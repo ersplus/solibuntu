@@ -56,7 +56,7 @@ elif [ $1 == "administrateur" ] ; then
 			false "Configurer l'ordinateur" \
 			false "Installer le filtrage" \
 			false "Créer une clé USB" \
-			false "Modifier mot de passe gestionnaire")
+			false "Modifier les mots de passe")
 
 fi
 
@@ -150,39 +150,8 @@ fi
 
 	ret=2
 	;;
-	"Modifier mot de passe gestionnaire|")
-		entr=`zenity --forms \
-			--title="Changement du mot de passe" \
-			--text="Définir un nouveau mot de passe" \
-			--add-password="Nouveau mot de passe" \
-			--add-password="Confirmer le nouveau mot de passe" \
-			-- separator="|"`
-	
-		if [ $? == 0 ]; then
-			pass=`echo $entr | cut -d'|' -f1`
-			passverif=`echo $entr | cut -d'|' -f2`
-			if [ $pass == $passverif ]; then
-				testSecu $pass
-				if [ 0 == 0 ]; then
-					testDispo $pass
-					if [ $? == 0 ] ; then
-					zenity --question --text "Voulez-vous vraiment modifier le mot de passe gestionnaire ?"
-						if [ $? == 0 ] ; then
-							echo -e "$pass\n$pass" | passwd gestionnaire
-							# Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
-							#CTparental -setadmin gestionnaire $pass
-							zenity --info --text="Le mot de passe a été modifié avec succès"
-						fi
-					else
-						zenity --error
-					fi
-				else
-					zenity --info --text="Le mot de passe n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
-				fi
-			else
-				zenity --info --text="Les mots de passe doivent être identiques !"
-			fi
-		fi
+	"Modifier les mots de passe|")
+		changerMdp "administrateur" "gestionnaire"
 	;;
   esac
 
