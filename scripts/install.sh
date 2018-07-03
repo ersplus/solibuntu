@@ -180,9 +180,10 @@ if [ $? == 0 ] ; then
 	cd /home/gestionnaire/
 	rm -rf .config
 	tar -xvzf config.tar.gz
-	chown gestionnaire .config/
+	chown -R gestionnaire:gestionnaire .config/
+
 	rm config.tar.gz
-	
+
 	#Lancement du script au démarrage de session
 	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart
 
