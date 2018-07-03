@@ -104,7 +104,6 @@ fi
 	rm /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
 	pkill bmGreeter.sh
 	service lightdm restart
-	nohup xterm &
 	;;
 
 	"Installer le filtrage|")

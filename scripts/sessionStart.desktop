@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=sessionStart
+Comment="Script exécuté au démarrage de la session Solibuntu"
+Icon=""
+Exec=/opt/borne/scripts/sessionStart.sh
+Terminal=true
+StartupNotify=false
+Categories=""
