@@ -175,6 +175,9 @@ if [ $? == 0 ] ; then
 	rm -rf .config
 	tar -xvzf config.tar.gz
 
+	#Lancement du script au démarrage de session
+	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart
+
 	echo "Fin de l'installation"
 fi
 exit 0
