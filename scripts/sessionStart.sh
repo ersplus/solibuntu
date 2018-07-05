@@ -6,7 +6,7 @@ if [ ! -f $HOME/.config/solibuntu ] ; then
 	cd $HOME
 	rm -rf .config
 	tar -xvzf config.tar.gz
-	rm config.tar.gz
+	#rm config.tar.gz
 	if [ $USER == "gestionnaire" ] ; then
 		chown gestionnaire:gestionnaire .config/
 	fi
