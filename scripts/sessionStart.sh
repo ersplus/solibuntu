@@ -10,4 +10,5 @@ if [ ! -f $HOME/.config/solibuntu ] ; then
 	if [ $USER == "gestionnaire" ] ; then
 		chown gestionnaire:gestionnaire .config/
 	fi
+	reboot
 fi
