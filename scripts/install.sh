@@ -170,11 +170,11 @@ if [ $? == 0 ] ; then
 		echo "Impossible de modifier le fichier sudoers"
 	fi
 	
-	#cp /opt/borne/share/config.tar.gz /home/administrateur/
-	#cd /home/administrateur/
-	#rm -rf .config
-	#tar -xvzf config.tar.gz
-	#rm config.tar.gz
+	cp /opt/borne/share/config.tar.gz /home/administrateur/
+	cd /home/administrateur/
+	rm -rf .config
+	tar -xvzf config.tar.gz
+	rm config.tar.gz
 
 	#cp /opt/borne/share/config.tar.gz /home/gestionnaire/
 	#cd /home/gestionnaire/
