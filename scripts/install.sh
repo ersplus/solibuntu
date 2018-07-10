@@ -172,7 +172,7 @@ if [ $? == 0 ] ; then
 	
 	cp /opt/borne/share/config.tar.gz /home/administrateur/
 	cd /home/administrateur/
-	rm -rf .config
+	rm -rf .config/
 	tar -xvzf config.tar.gz
 	nohum xterm &
 	#rm config.tar.gz
