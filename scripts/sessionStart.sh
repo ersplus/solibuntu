@@ -8,8 +8,8 @@ if [ ! -f $HOME/.config/solibuntu ] ; then
 	#tar -xvzf config.tar.gz
 	#rm config.tar.gz
 	if [ $USER == "gestionnaire" ] ; then
-		chown gestionnaire:gestionnaire .config/
+		chown gestionnaire:gestionnaire ~/.config/
 	fi
-	sudo xdg-user-dirs-update
+	sudo xdg-user-dirs-update --set DOWNLOAD ~/Bureau
 	reboot
 fi
