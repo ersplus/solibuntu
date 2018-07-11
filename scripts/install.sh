@@ -171,10 +171,12 @@ if [ $? == 0 ] ; then
 	fi
 	
 	if [ $1 != "iso" ] ; then
-		cp /opt/borne/share/skel_admin.tar.gz /etc/skel
-		cd /etc/skel
+		cp /opt/borne/share/skel_admin.tar.gz /home/
+		cd /home/
 		tar xvzf skel_admin.tar.gz
-		nohup xterm &
+		mv skel_admin/ administrateur/
+		chown -R administrateur:administrateur administrateur/
+		rm skel_admin.tar.gz
 	fi
 
 	#Lancement du script au démarrage de session
