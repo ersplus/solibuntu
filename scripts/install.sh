@@ -170,7 +170,12 @@ if [ $? == 0 ] ; then
 		echo "Impossible de modifier le fichier sudoers"
 	fi
 	
-	
+	if [ $1 != "iso" ] ; then
+		cp /opt/borne/share/skel_admin.tar.gz /etc/skel
+		cd /etc/skel
+		tar xvzf skel_admin.tar.gz
+	fi
+
 	#Lancement du script au démarrage de session
 	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart
 
