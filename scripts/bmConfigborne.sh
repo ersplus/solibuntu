@@ -81,7 +81,7 @@ fi
 	echo "90" ;
 		# Lance le script d'installation
 		cd /Solibuntu
-		./install.sh installation
+		./install.sh maj
 		# Copie le nouveau script téléchargé dans le dossier Solibuntu
 		cp /opt/borne/scripts/install.sh /Solibuntu/install.sh
 	echo "# Mise à jour" ; apt autoremove --purge -y

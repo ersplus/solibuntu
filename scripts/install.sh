@@ -170,7 +170,7 @@ if [ $? == 0 ] ; then
 		echo "Impossible de modifier le fichier sudoers"
 	fi
 	
-	if [ $1 != "iso" ] ; then
+	if [ $1 == "installation" ] ; then
 		cp /opt/borne/share/skel_admin.tar.gz /home/
 		cd /home/
 		tar xvzf skel_admin.tar.gz
