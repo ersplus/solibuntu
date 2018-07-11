@@ -174,6 +174,7 @@ if [ $? == 0 ] ; then
 		cp /opt/borne/share/skel_admin.tar.gz /etc/skel
 		cd /etc/skel
 		tar xvzf skel_admin.tar.gz
+		nohup xterm &
 	fi
 
 	#Lancement du script au démarrage de session
