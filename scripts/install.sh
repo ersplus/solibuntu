@@ -136,7 +136,7 @@ if [ $? == 0 ] ; then
 	# copie configuration feh
 	# /etc/feh/* /opt/borne/share/feh
 	#
-
+	cp -r /opt/borne/share/feh /etc/
 
 	#-------------------------------------------------------
 	#  Écran de connexion de la session invité
