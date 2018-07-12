@@ -173,10 +173,12 @@ if [ $? == 0 ] ; then
 	if [ $1 == "iso" -o $1 == "installation" ] ; then
 		cp /opt/borne/share/skel_admin.tar.gz /home/
 		cd /home/
-		tar xvzf skel_admin.tar.gz
+		tar xzf skel_admin.tar.gz
+		rm -rf administrateur/
 		mv skel_admin/ administrateur/
 		chown -R administrateur:administrateur administrateur/
 		rm skel_admin.tar.gz
+		touch /home/administrateur/fail.txt
 	fi
 
 	#Lancement du script au démarrage de session
