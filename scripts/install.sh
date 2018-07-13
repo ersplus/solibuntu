@@ -170,15 +170,15 @@ if [ $? == 0 ] ; then
 		echo "Impossible de modifier le fichier sudoers"
 	fi
 	
-	if [ $1 == "iso" -o $1 == "installation" ] ; then
-		cp /opt/borne/share/skel_admin.tar.gz /home/
-		cd /home/
-		tar xzf skel_admin.tar.gz
-		rm -rf administrateur/
-		mv skel_admin/ administrateur/
-		chown -R administrateur:administrateur administrateur/
-		rm skel_admin.tar.gz
-		touch /home/administrateur/fail.txt
+	#if [ $1 == "installation" ] ; then
+	#	cp /opt/borne/share/skel_admin.tar.gz /home/
+	#	cd /home/
+	#	tar xzf skel_admin.tar.gz
+	#	rm -rf administrateur/
+	#	mv skel_admin/ administrateur/
+	#	chown -R administrateur:administrateur administrateur/
+	#	rm skel_admin.tar.gz
+	#	touch /home/administrateur/fail.txt
 	fi
 
 	#Lancement du script au démarrage de session
