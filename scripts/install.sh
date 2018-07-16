@@ -179,7 +179,7 @@ if [ $? == 0 ] ; then
 	#	chown -R administrateur:administrateur administrateur/
 	#	rm skel_admin.tar.gz
 	#	touch /home/administrateur/fail.txt
-	fi
+	#fi
 
 	#Lancement du script au démarrage de session
 	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart
