@@ -12,11 +12,6 @@ getFirstID() {
     if [ ! -f /root/.uniqID ] ;then
         ret=1
         while [ $ret -eq 1 ]; do
-            cp /opt/borne/share/config.tar.gz /home/administrateur
-            cd /home/administrateur
-            rm -rf .config/
-            tar -xvzf config.tar.gz
-
             ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Nom de l'association")
             ret=$?
             if [ $ret -eq 0 ];then
