@@ -8,12 +8,14 @@
 
 repinstallation="/opt/borne"
 
-groupadd Solibuntu
-useradd root Solibuntu
-useradd administrateur Solibuntu
-useradd gestionnaire Solibuntu
-chgrp Solibuntu /root/
-chmod 774 /root/
+if [ $1 == "installation" ] ; then
+	groupadd Solibuntu
+	useradd root Solibuntu
+	useradd administrateur Solibuntu
+	useradd gestionnaire Solibuntu
+	chgrp Solibuntu /root/
+	chmod 774 /root/
+fi
 #-------------------------------------------------------
 #  Réccupération des sources Dev du projet
 #-------------------------------------------------------
