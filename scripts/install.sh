@@ -7,6 +7,7 @@
 
 
 repinstallation="/opt/borne"
+
 groupadd Solibuntu
 useradd root Solibuntu
 useradd administrateur Solibuntu
@@ -17,10 +18,6 @@ chmod 774 /root/
 #  Réccupération des sources Dev du projet
 #-------------------------------------------------------
 
-cd /opt/
-# Check branche dev
-wget https://github.com/ersplus/solibuntu/archive/Dev.zip
-
 #if [ $1 == "iso" ] ; then
 	#useradd -m administrateur
 	#echo -e "AdminSolibuntu\nAdminSolibuntu" | passwd administrateur
@@ -28,12 +25,6 @@ wget https://github.com/ersplus/solibuntu/archive/Dev.zip
 #fi
 if [ $? == 0 ] ; then
 	#check branche master 
-	# wget https://github.com/ersplus/solibuntu/archive/master.zip
-	rm -rf /opt/borne
-	unzip Dev.zip
-	mv /opt/solibuntu-Dev $repinstallation
-	chmod +x $repinstallation/scripts/*.sh
-	rm Dev.zip
 
 	#-------------------------------------------------------
 	# Environnement Solibuntu
@@ -174,24 +165,8 @@ if [ $? == 0 ] ; then
 	else
 		echo "Impossible de modifier le fichier sudoers"
 	fi
-	
-	#if [ $1 == "installation" ] ; then
-	#	cp /opt/borne/share/skel_admin.tar.gz /home/
-	#	cd /home/
-	#	tar xzf skel_admin.tar.gz
-	#	rm -rf administrateur/
-	#	mv skel_admin/ administrateur/
-	#	chown -R administrateur:administrateur administrateur/
-	#	rm skel_admin.tar.gz
-	#	touch /home/administrateur/fail.txt
-	#fi
 
-	#Lancement du script au démarrage de session
 	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart/sessionStart.desktop
-
-	if [ $# -ge 1 ] ; then
-		touch /home/administrateur/"$1".txt
-	fi
 
 	echo "Fin de l'installation"
 fi
