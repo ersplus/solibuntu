@@ -7,7 +7,12 @@
 
 
 repinstallation="/opt/borne"
-
+groupadd Solibuntu
+useradd root Solibuntu
+useradd administrateur Solibuntu
+useradd gestionnaire Solibuntu
+chgrp Solibuntu /root/
+chmod 774 /root/
 #-------------------------------------------------------
 #  Réccupération des sources Dev du projet
 #-------------------------------------------------------
@@ -182,7 +187,7 @@ if [ $? == 0 ] ; then
 	#fi
 
 	#Lancement du script au démarrage de session
-	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart
+	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart/sessionStart.desktop
 
 	if [ $# -ge 1 ] ; then
 		touch /home/administrateur/"$1".txt
