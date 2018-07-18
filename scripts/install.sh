@@ -112,6 +112,10 @@ if [ $? == 0 ] ; then
 	# Installation de Gdebi pour résoudre les dépendances de l'installation de CTparental
 	apt-get install -y gdebi
 
+	# Installation des locales
+	apt-get install firefox-locale-fr aspell-fr myspell-fr
+
+
 	# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
 	if [ $1 != "iso" ] ; then
 		dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
