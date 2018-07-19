@@ -38,7 +38,7 @@ if [ $1 == "gestionnaire" ] ; then
 			--margins="400" \
 			true  "Arrêter l'ordinateur" \
 			false "Redémarrer l'ordinateur" \
-			false "Accéder au Bureau" \
+			false "Configurer l'ordinateur" \
 			false "Créer une clé USB")
 
 # Choix administrateur
