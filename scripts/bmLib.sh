@@ -37,16 +37,16 @@ Désirez vous les modifier ? Ces mots de passes sont confidentiels ils ne seront
                 cd /opt/borne/scripts/
                 sudo ./filtrage_install.sh
                 if [ $? == 0 ] ; then
-                    zenity --info --width=300 --text "Le filtrage a bien été installé \n \
+                    zenity --info --width=300 --text "Le filtrage a bien été installé
                     Votre ordinateur va redémarrer"
                     #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
                 else
-                    zenity --info --width=300 --text "Une erreur s'est produite \n \
+                    zenity --info --width=300 --text "Une erreur s'est produite
                     Votre ordinateur va redémarrer"
                 fi
                 reboot
             else 
-                zenity --info --width=300 --text "Le filtrage n'a pas été installé \n \
+                zenity --info --width=300 --text "Le filtrage n'a pas été installé
                 Votre système va redémarrer."
                 reboot
             fi
