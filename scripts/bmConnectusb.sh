@@ -146,7 +146,7 @@ jamais été changé. Veuillez le signaler."
 						if [ $pass == "AdminSolibuntu" ] ; then
 							# Affiche un avertissement et propose de changer les mots de passe car
 							# l'utilisateur qui vient de se connecter est l'administrateur
-							zenity --question --text="Les mots de passe administrateur et gestionnaire sont \
+							zenity --question --width=200 --text="Les mots de passe administrateur et gestionnaire sont \
 toujours les mots de passe par défaut, désirez-vous les modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
@@ -156,7 +156,7 @@ toujours les mots de passe par défaut, désirez-vous les modifier ?" \
 						else
 							# Affiche un avertissement et propose de changer le mot de passe car
 							# l'utilisateur qui vient de se connecter est l'administrateur
-							zenity --question --text="Le mot de passe gestionnaire est \
+							zenity --question --width=200 --text="Le mot de passe gestionnaire est \
 toujours le mot de passe par défaut, désirez-vous le modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
@@ -169,7 +169,7 @@ toujours le mot de passe par défaut, désirez-vous le modifier ?" \
 						if [ $pass == "AdminSolibuntu" ] ; then
 							# Affiche un avertissement et propose de changer le mot de passe car
 							# l'utilisateur qui vient de se connecter est l'administrateur
-							zenity --question --text="Le mot de passe administrateur est \
+							zenity --question --width=200 --text="Le mot de passe administrateur est \
 	toujours le mot de passe par défaut, désirez-vous le modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
