@@ -62,11 +62,11 @@ fi
   case ${reponse} in
 	"Arrêter l'ordinateur|")
 	# Arrête l'ordinateur
-	sudo halt
+	poweroff
 	;;
 	"Redémarrer l'ordinateur|")
 	# Redémarre l'ordinateur
-	sudo reboot
+	reboot
 	;;
 	"Mettre à jour et redémarrer|")
 	(
