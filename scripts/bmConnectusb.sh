@@ -117,11 +117,11 @@ while [ $ret -ne 0 ]
 					if [ $? == 0 ] ; then
 						# Affiche un message d'avertissement
 						zenity --info --width=200 --text "Attention, les mots de passe du compte administrateur et du \
-						compte gestionnaire n'ont jamais été changés. Veuillez le signaler."
+compte gestionnaire n'ont jamais été changés. Veuillez le signaler."
 					else
 						# Affiche un message d'avertissement
 						zenity --info --width=200 --text "Attention, le mot de passe du compte gestionnaire n'a \
-						jamais été changé. Veuillez le signaler."
+jamais été changé. Veuillez le signaler."
 					fi
 				else
 					# Teste si seul le mot de passe administrateur est celui par défaut
@@ -129,7 +129,7 @@ while [ $ret -ne 0 ]
 					if [ $? == 0 ] ; then
 						# Affiche un message d'avertissement
 						zenity --info --width=200 --text "Attention, le mot de passe du compte administrateur n'a \
-						jamais été changé. Veuillez le signaler."
+jamais été changé. Veuillez le signaler."
 					fi
 				fi
 				# Appel le script du panneau de configuration en indiquant le compte gestionnaire
@@ -147,7 +147,7 @@ while [ $ret -ne 0 ]
 							# Affiche un avertissement et propose de changer les mots de passe car
 							# l'utilisateur qui vient de se connecter est l'administrateur
 							zenity --question --text="Les mots de passe administrateur et gestionnaire sont \
-							toujours les mots de passe par défaut, désirez-vous les modifier ?" \
+toujours les mots de passe par défaut, désirez-vous les modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
 								# Appel la fonction permettant de changer le mot de passe
@@ -157,7 +157,7 @@ while [ $ret -ne 0 ]
 							# Affiche un avertissement et propose de changer le mot de passe car
 							# l'utilisateur qui vient de se connecter est l'administrateur
 							zenity --question --text="Le mot de passe gestionnaire est \
-							toujours le mot de passe par défaut, désirez-vous le modifier ?" \
+toujours le mot de passe par défaut, désirez-vous le modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
 								# Appel la fonction permettant de changer le mot de passe
@@ -170,7 +170,7 @@ while [ $ret -ne 0 ]
 							# Affiche un avertissement et propose de changer le mot de passe car
 							# l'utilisateur qui vient de se connecter est l'administrateur
 							zenity --question --text="Le mot de passe administrateur est \
-							toujours le mot de passe par défaut, désirez-vous le modifier ?" \
+	toujours le mot de passe par défaut, désirez-vous le modifier ?" \
 							--ok-label "Oui" --cancel-label="Non"
 							if [ $? == 0 ] ; then
 								# Appel la fonction permettant de changer le mot de passe
