@@ -175,6 +175,17 @@ if [ $? == 0 ] ; then
 
 	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart/sessionStart.desktop
 
+	#Copie des profils
+	cp /opt/borne/share/skel_admin.tar.gz /home/
+	cp /opt/borne/share/skel_gest.tar.gz /home/
+	cd /home/
+	rm -rf gestionnaire/
+	tar -xvzf skel_gest.tar.gz
+	mv skel_gest/ gestionnaire/
+	rm -rf administrateur/
+	tar -xvzf skel_admin.tar.gz
+	mv skel_admin/ administrateur/
+
 	echo "Fin de l'installation"
 fi
 exit 0
