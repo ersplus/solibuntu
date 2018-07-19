@@ -101,7 +101,9 @@ while [ $ret -ne 0 ]
 		case ${ret} in
 			1)
 			user="gestionnaire" 
-			pass=$(zenity --password)
+			pass=$(zenity --forms --title="Configuration" \
+--text="Saisissez votre mot de passe\n(administrateur ou gestionnaire)" \
+--add-password="Mot de passe")
 
 			# Teste si le mot de passe correspond au compte "gestionnaire"
 			testMdp $user $pass

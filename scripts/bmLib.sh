@@ -21,9 +21,12 @@ getFirstID() {
                 chmod u=rx,go-rwx /root/.uniqID
             fi
 
-            zenity --question --text="Les mots de passe administrateur et gestionnaire sont \
-            définis par défaut, désirez-vous les modifier ?" \
-            --ok-label "Oui" --cancel-label="Non"
+            zenity --width=500 --height=50 --question --text="Les mots de passe administrateur et gestionnaire sont \
+définis par défaut. Actuellement ils sont : 
+pour l'administrateur --> AdminSolibuntu, 
+pour le gestionnaire --> AdminAsso
+Désirez vous les modifier ? Ces mots de passes sont confidentiels ils ne seront plus communiqués ultérieurement." \
+--ok-label "Oui" --cancel-label="Non"
             if [ $? == 0 ] ; then
                 changerMdp "administrateur" "gestionnaire"
             fi

@@ -5,6 +5,7 @@
 ### Installation Solibuntu dev       ###
 ### 28/04/2018                       ###
 
+zenity --info --text "L'installation de Solibuntu est en cours, veuillez patienter..."
 
 repinstallation="/opt/borne"
 
