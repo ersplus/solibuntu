@@ -116,11 +116,11 @@ while [ $ret -ne 0 ]
 					testMdp "administrateur" "AdminSolibuntu"
 					if [ $? == 0 ] ; then
 						# Affiche un message d'avertissement
-						zenity --info --text "Attention, les mots de passe du compte administrateur et du \
+						zenity --info --width=200 --text "Attention, les mots de passe du compte administrateur et du \
 						compte gestionnaire n'ont jamais été changés. Veuillez le signaler."
 					else
 						# Affiche un message d'avertissement
-						zenity --info --text "Attention, le mot de passe du compte gestionnaire n'a \
+						zenity --info --width=200 --text "Attention, le mot de passe du compte gestionnaire n'a \
 						jamais été changé. Veuillez le signaler."
 					fi
 				else
@@ -128,7 +128,7 @@ while [ $ret -ne 0 ]
 					testMdp "administrateur" "AdminSolibuntu"
 					if [ $? == 0 ] ; then
 						# Affiche un message d'avertissement
-						zenity --info --text "Attention, le mot de passe du compte administrateur n'a \
+						zenity --info --width=200 --text "Attention, le mot de passe du compte administrateur n'a \
 						jamais été changé. Veuillez le signaler."
 					fi
 				fi
