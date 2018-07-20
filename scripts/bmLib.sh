@@ -12,13 +12,43 @@ getFirstID() {
     if [ ! -f /root/.uniqID ] ;then
         ret=1
         while [ $ret -eq 1 ]; do
-	        ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Nom de l'association")
-	        ret=$?
-	        if [ $ret -eq 0 ];then
-		        nomAsso="`echo ${ans}`"
+            ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Nom de l'association")
+            ret=$?
+            if [ $ret -eq 0 ];then
+                nomAsso="`echo ${ans}`"
                 mac="`getUniqID`"
-                echo "${nomAsso}_${mac}" > /roresult=`testMdp $user $pass`ot/.uniqID
+                echo "${nomAsso}_${mac}" > /root/.uniqID
                 chmod u=rx,go-rwx /root/.uniqID
+            fi
+
+            zenity --width=500 --height=50 --question --text="Les mots de passe administrateur et gestionnaire sont \
+définis par défaut. Actuellement ils sont : 
+pour l'administrateur --> AdminSolibuntu, 
+pour le gestionnaire --> AdminAsso
+Désirez vous les modifier ? Ces mots de passes sont confidentiels ils ne seront plus communiqués ultérieurement." \
+--ok-label "Oui" --cancel-label="Non"
+            if [ $? == 0 ] ; then
+                changerMdp "administrateur" "gestionnaire"
+            fi
+
+            zenity --question --text 'Voulez-vous installer le filtrage ?' \
+            --ok-label "Oui" --cancel-label="Non"
+            if [ $? == 0 ] ; then
+                cd /opt/borne/scripts/
+                sudo ./filtrage_install.sh
+                if [ $? == 0 ] ; then
+                    zenity --info --width=300 --text "Le filtrage a bien été installé
+                    Votre ordinateur va redémarrer"
+                    #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
+                else
+                    zenity --info --width=300 --text "Une erreur s'est produite
+                    Votre ordinateur va redémarrer"
+                fi
+                reboot
+            else 
+                zenity --info --width=300 --text "Le filtrage n'a pas été installé
+                Votre système va redémarrer."
+                reboot
             fi
         done
     fi
@@ -47,6 +77,7 @@ getDateTime() {
 getUniqID() {
     mac="`/sbin/ifconfig | grep enp | grep HWaddr | awk '{print $NF}' | sed -e 's/:/_/g'`"
     mac64=`echo "${mac}" | base64 -`
+    #nohup xterm &
     echo "${mac64}"
 }
 
@@ -135,10 +166,88 @@ testSecu() {
         return 0
     else
         # Le mot de passe n'est pas valide
-        zenity --info --text "Password is not complex enough, it must contain at least: \n \
-                            8 characters total, 1 uppercase, lowercase 1, number 1 \n \
-                            and one special character among the following : &éè~#{}()ç_@à?.;:/!,$<>=£%"
+        #zinity --info --text "Password is not complex enough, it must contain at least: \n \
+        #                    8 characters total, 1 uppercase, lowercase 1, number 1 \n \
+        #                    and one special character among the following : &éè~#{}()ç_@à?.;:/\!,\$<>=£\%"
         return 1
+    fi
+}
+
+changerMdp() {
+    if [ $# == 2 ] ; then
+        entr=`zenity --forms \
+        --title="Changement du mot de passe" \
+        --text="Définir un nouveau mot de passe administrateur + gestionnaire" \
+        --add-password="Nouveau mot de passe administrateur" \
+        --add-password="Confirmer le mot de passe" \
+        --add-password="Nouveau mot de passe gestionnaire" \
+        --add-password="Confirmer le mot de passe" \
+        --separator="|"`
+                            
+        if [ $? == 0 ]; then
+            passAdmin=`echo $entr | cut -d'|' -f1`
+            passVerifAdmin=`echo $entr | cut -d'|' -f2`
+            passGest=`echo $entr | cut -d'|' -f3`
+            passVerifGest=`echo $entr | cut -d'|' -f4`
+            if [ $passAdmin == $passVerifAdmin ] && [ $passGest == $passVerifGest ]; then
+                testSecu $passAdmin
+                if [ 0 == 0 ]; then
+                    testSecu $passGest
+                    if [ 0 == 0 ]; then
+                        zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
+                        if [ $? == 0 ] ; then
+                            if [ $passGest != "" ] ; then
+                                echo -e "$passGest\n$passGest" | passwd gestionnaire
+                            fi
+                            if [ $passAdmin != "" ] ; then
+                                echo -e "$passAdmin\n$passAdmin" | passwd administrateur
+                                CTparental -setadmin administrateur $passAdmin
+                            fi
+                            # Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
+                            #CTparental -setadmin gestionnaire $pass
+                            zenity --info --text="Les mots de passe ont été modifiés avec succès"
+                        fi
+                    else
+                        zenity --info --text="Le mot de passe gestionnaire n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                    fi
+                else
+                    zenity --info --text="Le mot de passe administrateur n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                fi
+            else
+                zenity --info --text="Les mots de passe doivent être identiques !"
+            fi
+        fi
+    elif [ $# == 1 ]; then
+        entr=`zenity --forms \
+        --title="Changement du mot de passe" \
+        --text="Définir un nouveau mot de passe $1" \
+        --add-password="Nouveau mot de passe $1" \
+        --add-password="Confirmer le mot de passe" \
+        --separator="|"`
+
+        if [ $? == 0 ]; then
+            pass=`echo $entr | cut -d'|' -f1`
+            passVerif=`echo $entr | cut -d'|' -f2`
+            if [ $pass == $passVerif ] ; then
+                testSecu $pass
+                if [ 0 == 0 ]; then
+                    zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
+                    if [ $? == 0 ] ; then
+                        if [ $pass != "" ] ; then
+                            echo -e "$pass\n$pass" | passwd $1
+                            if [ $1 == "administrateur" ] ; then
+                                CTparental -setadmin administrateur $pass
+                            fi
+                            zenity --info --text="Le mot de passe $1 a été modifié avec succès"
+                        fi
+                    fi
+                else
+                    zenity --info --text="Le mot de passe $1 n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                fi
+            else
+                zenity --info --text="Les mots de passe doivent être identiques !"
+            fi
+        fi
     fi
 }
 

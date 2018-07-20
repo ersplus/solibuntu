@@ -134,9 +134,15 @@ console-data	console-data/keymap/qwerty/turkish/standard/keymap	select
 console-data	console-data/keymap/qwerty/spanish/standard/keymap	select	
 iptables-persistent	iptables-persistent/autosave_v6	boolean	true
 iptables-persistent	iptables-persistent/autosave_v4	boolean	true
-ctparental	ctparental/httppassword	password	AdminAsso
-ctparental	ctparental/httppassword2	password	AdminAsso
+ctparental	ctparental/httppassword	password	AdminSolibuntu
+ctparental	ctparental/httppassword2	password	AdminSolibuntu
 ctparental	ctparental/erreurinternet	error	
 ctparental	ctparental/httppassword_trop_simple	error	
 ctparental	ctparental/httppassword_non_ident	error	
-ctparental	ctparental/httplogin	string	gestionnaire
+ctparental	ctparental/httplogin	string	administrateur
+ttf-mscorefonts-installer	msttcorefonts/baddldir	error	
+ttf-mscorefonts-installer	msttcorefonts/accepted-mscorefonts-eula	boolean	true
+ttf-mscorefonts-installer	msttcorefonts/error-mscorefonts-eula	error	
+ttf-mscorefonts-installer	msttcorefonts/present-mscorefonts-eula	note	
+ttf-mscorefonts-installer	msttcorefonts/dlurl	string	
+ttf-mscorefonts-installer	msttcorefonts/dldir	string	

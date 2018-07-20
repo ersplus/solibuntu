@@ -12,9 +12,6 @@ repinstallation="/opt/borne"
 [ ! -f $repinstallation/scripts/bmLib.sh ] && logger -p local0.crit 'Impossible de trouver la bibliothèque standard. Abandon.' && exit 1
 . $repinstallation/scripts/bmLib.sh
 
-#[ ! -f /usr/bin/CTparental ] && logger -p local0.crit 'Impossible de trouver la bibliothèque CTparental. Abandon.' && exit 1
-#. /usr/bin/CTparental
-
 # ======================================================================
 # Script de gestion du mode de filtrage
 # ======================================================================
@@ -31,38 +28,63 @@ hauteurEcran=$(xwininfo -root | awk '$1=="Height:" {print $2}')
 # Ecran configuration
 # ======================================================================
 
-reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
-		--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
-		--image=info --image-on-top \
-		--list --radiolist --no-headers \
-		--column 1 --column 2 --print-column=2 \
-		--margins="400" \
-		true  "Arrêter l'ordinateur" \
-		false "Redémarrer l'ordinateur" \
-		false "Mettre à jour et redémarrer" \
-		false "Configurer l'ordinateur" \
-		false "Créer une clé USB" \
-		false "Modifier mot de passe gestionnaire")
+# Choix gestionnaire
+if [ $1 == "gestionnaire" ] ; then
+	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
+			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
+			--image=info --image-on-top \
+			--list --radiolist --no-headers \
+			--column 1 --column 2 --print-column=2 \
+			--margins="400" \
+			true  "Arrêter l'ordinateur" \
+			false "Redémarrer l'ordinateur" \
+			false "Configurer l'ordinateur" \
+			false "Créer une clé USB")
+
+# Choix administrateur
+elif [ $1 == "administrateur" ] ; then
+	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
+			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
+			--image=info --image-on-top \
+			--list --radiolist --no-headers \
+			--column 1 --column 2 --print-column=2 \
+			--margins="400" \
+			true  "Arrêter l'ordinateur" \
+			false "Redémarrer l'ordinateur" \
+			false "Mettre à jour et redémarrer" \
+			false "Configurer l'ordinateur" \
+			false "Installer le filtrage" \
+			false "Créer une clé USB" \
+			false "Modifier les mots de passe")
+
+fi
 
   case ${reponse} in
 	"Arrêter l'ordinateur|")
-	sudo halt
+	# Arrête l'ordinateur
+	poweroff
 	;;
 	"Redémarrer l'ordinateur|")
-	sudo reboot
+	# Redémarre l'ordinateur
+	reboot
 	;;
 	"Mettre à jour et redémarrer|")
 	(
 	echo "10" ; sleep 1
-	echo "# Vérification des mises à jour" ; sudo apt update
+	echo "# Vérification des mises à jour" ; apt update
 	echo "20" ; sleep 1
-	echo "# Application des mises à jour" ; sudo apt full-upgrade -y
+	echo "# Application des mises à jour" ; apt full-upgrade -y
 	echo "40" ; sleep 1
-	echo "# Mise à jour" ; sudo apt install -f
+	echo "# Mise à jour" ; apt install -f
 	echo "60" ; sleep 1
-	echo "# Mise à jour" ; sudo apt autoremove --purge -y
-	echo "80" ; sleep 1
-	echo "# Redémarrage du système" ; sudo reboot
+	echo "# Maj Solibuntu"
+	echo "90" ;
+		# Lance le script d'installation
+		cd /Solibuntu
+		./install.sh maj
+	echo "# Mise à jour" ; apt autoremove --purge -y
+	echo "95" ; sleep 1
+	echo "# Redémarrage du système" ; reboot
 	echo "99" ; sleep 1
 	) |
 	zenity --progress \
@@ -79,8 +101,24 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 	rm /etc/lightdm/lightdm.conf.d/50-auto-guest.conf
 	rm /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
 	pkill bmGreeter.sh
-	pkill lightdm
+	service lightdm restart
 	;;
+
+	"Installer le filtrage|")
+		# Lance le script d'installation du filtrage
+		cd /opt/borne/scripts/
+        sudo ./filtrage_install.sh
+        if [ $? == 0 ] ; then
+            zenity --info --width=300 --text "Le filtrage a bien été installé \n \
+            Votre ordinateur va redémarrer"
+            #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
+        else
+            zenity --info --width=300 --text "Une erreur s'est produite \n \
+            Votre ordinateur va redémarrer"
+        fi
+        reboot
+	;;
+
 	"Créer une clé USB|")	
 	# Message pour l'utilisateur
 	yad --text="Veuillez connecter la clé USB que vous désirez associer à cet ordinateur pour pouvoir le dévérrouiller.\n\n Cliquez sur <b>Suivant</b>." --form --buttons-layout=edge --button="Annuler":1 --button="Suivant":0
@@ -114,39 +152,9 @@ reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 
 	ret=2
 	;;
-	"Modifier mot de passe gestionnaire|")
-		entr=`zenity --forms \
-			--title="Changement du mot de passe" \
-			--text="Définir un nouveau mot de passe" \
-			--add-password="Nouveau mot de passe" \
-			--add-password="Confirmer le nouveau mot de passe" \
-			-- separator="|"`
-	
-		if [ $? == 0 ]; then
-			pass=`echo $entr | cut -d'|' -f1`
-			passverif=`echo $entr | cut -d'|' -f2`
-			if [ $pass == $passverif ]; then
-				testSecu $pass
-				if [ 0 == 0 ]; then
-					testDispo $pass
-					if [ $? == 0 ] ; then
-					zenity --question --text "Voulez-vous vraiment modifier le mot de passe gestionnaire ?"
-						if [ $? == 0 ] ; then
-							echo -e "$pass\n$pass" | passwd gestionnaire
-							# Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
-							/usr/bin/CTparental -setadmin gestionnaire $pass
-							zenity --info --text="Le mot de passe a été modifié avec succès"
-						fi
-					else
-						zenity --error
-					fi
-				else
-					zenity --info --text="Le mot de passe n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
-				fi
-			else
-				zenity --info --text="Les mots de passe doivent être identiques !"
-			fi
-		fi
+	"Modifier les mots de passe|")
+		# Appel la fonction de changement des mots de passe
+		changerMdp "administrateur" "gestionnaire"
 	;;
   esac
 

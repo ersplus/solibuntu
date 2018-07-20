@@ -64,19 +64,17 @@ xsetroot -cursor_name left_ptr&
 # Creation de l'identifiant unique lors de la premiere mise en route de la borne
 getFirstID
 
-
 # largeur de l'écran
 largeurEcran=$(xwininfo -root | awk '$1=="Width:" {print $2}')
 
 # Hauteur de l'écran
 hauteurEcran=$(xwininfo -root | awk '$1=="Height:" {print $2}')
-
 #pointX=$(echo $((($largeurEcran-500)/2)))
 pointX="0"
 pointY=$(echo $((($hauteurEcran-300)/1)))
 
 nohup feh -ZFx /opt/borne/share/background.png &
-
+#nohup xterm &
 # On fixe la valeur de ret pour la boucle
 ret=2
 
@@ -101,23 +99,87 @@ while [ $ret -ne 0 ]
 # [ `whoami` = root ] || { gksudo "$0" "$@"; exit $?; }
 
 		case ${ret} in
-			1) 
-			#if [ $(zenity --password) == "AdminAsso" ] ; then 
-			#	$repinstallation/scripts/bmConfigborne.sh; 
-			#fi
+			1)
 			user="gestionnaire" 
-			pass=$(zenity --password)
-			#nohup xterm &
+			pass=$(zenity --forms --title="Configuration" \
+--text="Saisissez votre mot de passe\n(administrateur ou gestionnaire)" \
+--add-password="Mot de passe")
+
+			# Teste si le mot de passe correspond au compte "gestionnaire"
 			testMdp $user $pass
-			
+
 			if [ $? == 0 ];then
-				$repinstallation/scripts/bmConfigborne.sh
+
+				# Teste si le mot de passe du gestionnaire est celui par défaut
+				if [ $pass == "AdminAsso" ] ; then
+					# Teste si le mot de passe de l'administrateur est également celui par défaut
+					testMdp "administrateur" "AdminSolibuntu"
+					if [ $? == 0 ] ; then
+						# Affiche un message d'avertissement
+						zenity --info --width=200 --text "Attention, les mots de passe du compte administrateur et du \
+compte gestionnaire n'ont jamais été changés. Veuillez le signaler."
+					else
+						# Affiche un message d'avertissement
+						zenity --info --width=200 --text "Attention, le mot de passe du compte gestionnaire n'a \
+jamais été changé. Veuillez le signaler."
+					fi
+				else
+					# Teste si seul le mot de passe administrateur est celui par défaut
+					testMdp "administrateur" "AdminSolibuntu"
+					if [ $? == 0 ] ; then
+						# Affiche un message d'avertissement
+						zenity --info --width=200 --text "Attention, le mot de passe du compte administrateur n'a \
+jamais été changé. Veuillez le signaler."
+					fi
+				fi
+				# Appel le script du panneau de configuration en indiquant le compte gestionnaire
+				$repinstallation/scripts/bmConfigborne.sh gestionnaire
 			elif [ $? == 1 ];then
+				# Teste si le mot de passe est celui du compte administrateur
 				user="administrateur"
 				testMdp $user $pass
 				if [ $? == 0 ];then
-					$user="gestionnaire"
-					$repinstallation/scripts/bmConfigborne.sh
+					# Teste si le mot de passe du gestionnaire est celui par défaut
+					testMdp "gestionnaire" "AdminAsso"
+					if [ $? == 0 ]; then
+						# Teste si le mot de passe administrater est celui par défaut
+						if [ $pass == "AdminSolibuntu" ] ; then
+							# Affiche un avertissement et propose de changer les mots de passe car
+							# l'utilisateur qui vient de se connecter est l'administrateur
+							zenity --question --width=200 --text="Les mots de passe administrateur et gestionnaire sont \
+toujours les mots de passe par défaut, désirez-vous les modifier ?" \
+							--ok-label "Oui" --cancel-label="Non"
+							if [ $? == 0 ] ; then
+								# Appel la fonction permettant de changer le mot de passe
+								changerMdp "administrateur" "gestionnaire"
+							fi
+						else
+							# Affiche un avertissement et propose de changer le mot de passe car
+							# l'utilisateur qui vient de se connecter est l'administrateur
+							zenity --question --width=200 --text="Le mot de passe gestionnaire est \
+toujours le mot de passe par défaut, désirez-vous le modifier ?" \
+							--ok-label "Oui" --cancel-label="Non"
+							if [ $? == 0 ] ; then
+								# Appel la fonction permettant de changer le mot de passe
+								changerMdp "gestionnaire"
+							fi
+						fi
+					else
+						# Teste si seul le mot de passe administrateur est celui par défaut
+						if [ $pass == "AdminSolibuntu" ] ; then
+							# Affiche un avertissement et propose de changer le mot de passe car
+							# l'utilisateur qui vient de se connecter est l'administrateur
+							zenity --question --width=200 --text="Le mot de passe administrateur est \
+	toujours le mot de passe par défaut, désirez-vous le modifier ?" \
+							--ok-label "Oui" --cancel-label="Non"
+							if [ $? == 0 ] ; then
+								# Appel la fonction permettant de changer le mot de passe
+								changerMdp "administrateur"
+							fi
+						fi
+					fi
+					# Appel le script du panneau de configuration en indiquant le compte administrateur
+					$repinstallation/scripts/bmConfigborne.sh administrateur
 				fi
 			fi
 			;;
