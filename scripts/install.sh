@@ -183,10 +183,10 @@ if [ $? == 0 ] ; then
 		cd /home/
 		rm -rf gestionnaire/
 		tar -xvzf skel_gest.tar.gz
-		mv skel_gest/ gestionnaire/
 		rm -rf administrateur/
 		tar -xvzf skel_admin.tar.gz
-		mv skel_admin/ administrateur/
+		rm skel_admin.tar.gz
+		rm skel_gest.tar.gz
 	fi
 
 	echo "Fin de l'installation"
