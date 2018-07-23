@@ -12,7 +12,9 @@ getFirstID() {
     if [ ! -f /root/.uniqID ] ;then
         ret=1
         while [ $ret -eq 1 ]; do
-            ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Nom de l'association")
+            ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Bienvenue dans l’assistant de démarrage de Solibuntu. 
+Pour commencer la configuration, veuillez saisir le nom de l’association : 
+")
             ret=$?
             if [ $ret -eq 0 ];then
                 nomAsso="`echo ${ans}`"
@@ -21,33 +23,42 @@ getFirstID() {
                 chmod u=rx,go-rwx /root/.uniqID
             fi
 
-            zenity --width=500 --height=50 --question --text="Les mots de passe administrateur et gestionnaire sont \
-définis par défaut. Actuellement ils sont : 
-pour l'administrateur --> AdminSolibuntu, 
-pour le gestionnaire --> AdminAsso
-Désirez vous les modifier ? Ces mots de passes sont confidentiels ils ne seront plus communiqués ultérieurement." \
+            zenity --width=550 --height=50 --question --text="Pour utiliser et personnaliser Solibuntu, deux mots de passe sont nécessaires. Ils sont définis par défaut :
+
+- Pour l’administrateur, responsable du poste : AdminSolibuntu
+
+- Pour le gestionnaire, qui pourra modifier l’environnement de l’utilisateur : AdminAsso
+
+Ces mots de passes sont confidentiels, ils ne seront plus communiqués ultérieurement.
+Afin de garantir la sécurité de votre installation, désirez-vous modifier ces mots de passe ?  " \
 --ok-label "Oui" --cancel-label="Non"
             if [ $? == 0 ] ; then
                 changerMdp "administrateur" "gestionnaire"
             fi
 
-            zenity --question --text 'Voulez-vous installer le filtrage ?' \
-            --ok-label "Oui" --cancel-label="Non"
+            zenity --question --width=450 --text 'Pour répondre aux contraintes de sécurité, il est nécessaire de bloquer les sites inappropriés (sites pour adultes, agressif, drogue, téléchargement illégaux, …).
+
+Si votre association ne dispose d’aucun dispositif pour bloquer ces sites, Solibuntu peut installer une solution logicielle pour les filtrer.
+
+Ce dispositif de filtrage (CTParental) sera ensuite configurable par l’administrateur en utilisant ses identifiants via l’adresse internet 
+http://admin.ct.local
+Désirez-vous installer cette solution ?' \
+--ok-label "Oui" --cancel-label="Non"
             if [ $? == 0 ] ; then
                 cd /opt/borne/scripts/
                 sudo ./filtrage_install.sh
                 if [ $? == 0 ] ; then
                     zenity --info --width=300 --text "Le filtrage a bien été installé
-                    Votre ordinateur va redémarrer"
+L’ordinateur va redémarrer pour finaliser l’installation"
                     #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
                 else
                     zenity --info --width=300 --text "Une erreur s'est produite
-                    Votre ordinateur va redémarrer"
+Votre ordinateur va redémarrer"
                 fi
                 reboot
             else 
                 zenity --info --width=300 --text "Le filtrage n'a pas été installé
-                Votre système va redémarrer."
+L'ordinateur va redémarrer."
                 reboot
             fi
         done
@@ -176,8 +187,10 @@ testSecu() {
 changerMdp() {
     if [ $# == 2 ] ; then
         entr=`zenity --forms \
-        --title="Changement du mot de passe" \
-        --text="Définir un nouveau mot de passe administrateur + gestionnaire" \
+        --title="Changement des mot de passe" \
+        --text="Modification du mot de passe administrateur et gestionnaire
+Les mots de passe doivent respecter les règles suivantes : 
+8 caractères minimum dont au moins une lettre majuscule et un chiffre." \
         --add-password="Nouveau mot de passe administrateur" \
         --add-password="Confirmer le mot de passe" \
         --add-password="Nouveau mot de passe gestionnaire" \
@@ -190,31 +203,36 @@ changerMdp() {
             passGest=`echo $entr | cut -d'|' -f3`
             passVerifGest=`echo $entr | cut -d'|' -f4`
             if [ $passAdmin == $passVerifAdmin ] && [ $passGest == $passVerifGest ]; then
-                testSecu $passAdmin
-                if [ 0 == 0 ]; then
-                    testSecu $passGest
+                if [ $passAdmin != $passGest ] ; then
+                    testSecu $passAdmin
                     if [ 0 == 0 ]; then
-                        zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
-                        if [ $? == 0 ] ; then
-                            if [ $passGest != "" ] ; then
-                                echo -e "$passGest\n$passGest" | passwd gestionnaire
+                        testSecu $passGest
+                        if [ 0 == 0 ]; then
+                            zenity --question --width=250 --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
+                            if [ $? == 0 ] ; then
+                                if [ $passGest != "" ] ; then
+                                    echo -e "$passGest\n$passGest" | passwd gestionnaire
+                                fi
+                                if [ $passAdmin != "" ] ; then
+                                    echo -e "$passAdmin\n$passAdmin" | passwd administrateur
+                                    CTparental -setadmin administrateur $passAdmin
+                                fi
+                                # Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
+                                #CTparental -setadmin gestionnaire $pass
+                                zenity --info --width=300 --text="Les mots de passe ont été modifiés avec succès
+En cas de perte ou d’oubli du mot de passe de l’administrateur, il sera nécessaire de réinstaller Solibuntu."
                             fi
-                            if [ $passAdmin != "" ] ; then
-                                echo -e "$passAdmin\n$passAdmin" | passwd administrateur
-                                CTparental -setadmin administrateur $passAdmin
-                            fi
-                            # Fouiller dans fonction debconfadminhttp() de /usr/bin/CTparental
-                            #CTparental -setadmin gestionnaire $pass
-                            zenity --info --text="Les mots de passe ont été modifiés avec succès"
+                        else
+                            zenity --info --width=300 --text="Le mot de passe gestionnaire n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
                         fi
                     else
-                        zenity --info --text="Le mot de passe gestionnaire n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                        zenity --info --width=300 --text="Le mot de passe administrateur n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
                     fi
                 else
-                    zenity --info --text="Le mot de passe administrateur n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                    zenity --info --width=300 --text="Les mots de passe administrateur et gestionnaire ne doivent pas être identiques"
                 fi
             else
-                zenity --info --text="Les mots de passe doivent être identiques !"
+                zenity --info --width=300 --text="Les mots de passe et leurs confirmation ne correspondent pas !"
             fi
         fi
     elif [ $# == 1 ]; then
@@ -231,21 +249,21 @@ changerMdp() {
             if [ $pass == $passVerif ] ; then
                 testSecu $pass
                 if [ 0 == 0 ]; then
-                    zenity --question --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
+                    zenity --question --width=300 --text "Voulez-vous vraiment modifier le mot de passe $1 ?"
                     if [ $? == 0 ] ; then
                         if [ $pass != "" ] ; then
                             echo -e "$pass\n$pass" | passwd $1
                             if [ $1 == "administrateur" ] ; then
                                 CTparental -setadmin administrateur $pass
                             fi
-                            zenity --info --text="Le mot de passe $1 a été modifié avec succès"
+                            zenity --info --width=300 --text="Le mot de passe $1 a été modifié avec succès"
                         fi
                     fi
                 else
-                    zenity --info --text="Le mot de passe $1 n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                    zenity --info --width=300 --text="Le mot de passe $1 n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
                 fi
             else
-                zenity --info --text="Les mots de passe doivent être identiques !"
+                zenity --info --width=300 --text="Les mots de passe doivent être identiques !"
             fi
         fi
     fi
