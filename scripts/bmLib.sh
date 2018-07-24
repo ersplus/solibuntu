@@ -23,14 +23,14 @@ Pour commencer la configuration, veuillez saisir le nom de l’association :
                 chmod u=rx,go-rwx /root/.uniqID
             fi
 
-            zenity --width=550 --height=50 --question --text="Pour utiliser et personnaliser Solibuntu, deux mots de passe sont nécessaires. Ils sont définis par défaut :
+            zenity --width=550 --height=50 --question --text="Deux mots de passe sont nécessaires pour utiliser et personnaliser Solibuntu. Ils sont définis par défaut :
 
 - Pour l’administrateur, responsable du poste : AdminSolibuntu
 
 - Pour le gestionnaire, qui pourra modifier l’environnement de l’utilisateur : AdminAsso
 
 Ces mots de passes sont confidentiels, ils ne seront plus communiqués ultérieurement.
-Afin de garantir la sécurité de votre installation, désirez-vous modifier ces mots de passe ?  " \
+Afin de garantir la sécurité de votre installation, désirez-vous modifier maintenant ces mots de passe ?  " \
 --ok-label "Oui" --cancel-label="Non"
             if [ $? == 0 ] ; then
                 changerMdp "administrateur" "gestionnaire"
@@ -171,16 +171,29 @@ testDispo() {
 # ======================================================================
 testSecu() {
     password=$1
-    password="$(echo "$password" | grep -E "^([a-z0-9A-Z]|[&éè~#{}()ç_@à?.;:/\!,\$<>=£\%\])*$")"
     if [ "${#password}" -ge 8 ] ; then
-        # Le mot de passe est valide
+        echo "$password" | grep -E "[a-z]"
+        if [ $? == 1 ] ; then
+            # Le mot de passe est incorrect
+            return 1
+        fi
+        echo "$password" | grep -E "[A-Z]"
+        if [ $? == 1 ] ; then
+            # Le mot de passe est incorrect
+            echo "C'est pas correct !"
+            return 1
+        fi
+        echo "$password" | grep -E "[0-9]"
+        if [ $? == 1 ] ; then
+            # Le mot de passe est incorrect
+            echo "C'est pas correct !"
+            return 1
+        fi
+        # Le mot de passe est sécurisé
         return 0
     else
-        # Le mot de passe n'est pas valide
-        #zinity --info --text "Password is not complex enough, it must contain at least: \n \
-        #                    8 characters total, 1 uppercase, lowercase 1, number 1 \n \
-        #                    and one special character among the following : &éè~#{}()ç_@à?.;:/\!,\$<>=£\%"
-        return 1
+        # Le mot de passe est incorrect
+        echo "C'est pas correct !"
     fi
 }
 
@@ -205,9 +218,9 @@ Les mots de passe doivent respecter les règles suivantes :
             if [ $passAdmin == $passVerifAdmin ] && [ $passGest == $passVerifGest ]; then
                 if [ $passAdmin != $passGest ] ; then
                     testSecu $passAdmin
-                    if [ 0 == 0 ]; then
+                    if [ $? == 0 ]; then
                         testSecu $passGest
-                        if [ 0 == 0 ]; then
+                        if [ $? == 0 ]; then
                             zenity --question --width=250 --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
                             if [ $? == 0 ] ; then
                                 if [ $passGest != "" ] ; then
@@ -223,10 +236,10 @@ Les mots de passe doivent respecter les règles suivantes :
 En cas de perte ou d’oubli du mot de passe de l’administrateur, il sera nécessaire de réinstaller Solibuntu."
                             fi
                         else
-                            zenity --info --width=300 --text="Le mot de passe gestionnaire n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                            zenity --info --width=300 --text="Le mot de passe gestionnaire n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule et un chiffre."
                         fi
                     else
-                        zenity --info --width=300 --text="Le mot de passe administrateur n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule, un chiffre et un caractère spécial"
+                        zenity --info --width=300 --text="Le mot de passe administrateur n'est pas assez fort, il doit contenir au moins 8 caractères dont au minimum une lettre majuscule, minuscule et un chiffre."
                     fi
                 else
                     zenity --info --width=300 --text="Les mots de passe administrateur et gestionnaire ne doivent pas être identiques"
