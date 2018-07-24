@@ -193,7 +193,7 @@ testSecu() {
         return 0
     else
         # Le mot de passe est incorrect
-        echo "C'est pas correct !"
+        return 1
     fi
 }
 
