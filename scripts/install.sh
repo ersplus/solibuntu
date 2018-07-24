@@ -5,9 +5,6 @@
 ### Installation Solibuntu dev       ###
 ### 28/04/2018                       ###
 
-if [ $1 == "installation" ] ; then
-	zenity --info --width=200 --text "L'installation de Solibuntu est en cours, veuillez patienter..."
-fi
 repinstallation="/opt/borne"
 
 if [ $1 == "installation" ] ; then
