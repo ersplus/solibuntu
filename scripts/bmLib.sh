@@ -186,7 +186,6 @@ testSecu() {
         echo "$password" | grep -E "[0-9]"
         if [ $? == 1 ] ; then
             # Le mot de passe est incorrect
-            echo "C'est pas correct !"
             return 1
         fi
         # Le mot de passe est sécurisé
