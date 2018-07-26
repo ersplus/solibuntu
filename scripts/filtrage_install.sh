@@ -50,23 +50,13 @@ repinstallation="/opt/borne"
 	echo "70" ; sleep 1
 	#echo "# Configuation du proxy" ; sudo cp -rf /opt/borne/share/proxy/defaulton /etc/chromium-browser/default
 	echo "80" ; sleep 1
-	echo "# Le filtrage internet a été installé avec succès, 
-le filtrage par défaut sera activé lors de l’utilisation de Solibuntu.
-
-Vous pourrez configurer celui-ci, si nécessaire, avec le compte \"administrateur\". 
-
-Le mot de passe par défaut est \"AdminSolibuntu\" \
-vous pouvez le modifier en changeant le mot de passe administrateur, une fois ceci fait, \
-le mot de passe du filtrage correspondra au nouveau mot de passe du compte administrateur.
-
-http://admin.ct.local" ;
+	echo "# Le filtrage internet a été installé avec succès, le filtrage par défaut sera activé lors de l’utilisation de Solibuntu. Vous pourrez configurer celui-ci, si nécessaire, avec le compte administrateur. Le mot de passe par défaut est : AdminSolibuntu. Vous pouvez le modifier en changeant le mot de passe administrateur, une fois ceci fait, le mot de passe du filtrage correspondra au nouveau mot de passe du compte administrateur. Rendez-vous à cette adresse pour pouvoir configurer le filtrage : http://admin.ct.local" ;
 	echo "99" ; sleep 1
 	)  |
 	zenity --progress \
 	  --title="Progression de installation" \
 	  --text="Installation du filtrage..." \
 	  --width=500 \
-	  --height=500 \
 	  --percentage=0
 
 	#if [ "$?" = -1 ] ; then
