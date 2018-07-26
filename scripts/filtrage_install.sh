@@ -10,6 +10,14 @@ installFiltrage() {
 	#cp /opt/borne/share/prefs.js /home/administrateur/.mozilla/firefox/*.default/
 	#cp /opt/borne/share/prefs.js /home/gestionnaire/.mozilla/firefox/*.default/
 	
+	if [ -f /root/.filtragepurged ] ; then
+		while read line; do
+			echo $line
+			echo $line | debconf-set-selections
+		done < /opt/borne/share/setselection.txt
+		rm /root/.filtragepurged
+	fi
+
 	mv /etc/firefox/syspref.js /etc/firefox/syspref.js.back
 	cp /opt/borne/share/prefs.js /etc/firefox/syspref.js
 	gdebi-gtk -n --auto-close /opt/borne/share/ctparental.deb
