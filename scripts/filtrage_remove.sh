@@ -13,7 +13,7 @@ repinstallation="/opt/borne"
 # test de présence du filtrage
 # ======================================================================
 
-if (test -f "/usr/sbin/dansguardian"); then
+if (test -f "/usr/bin/CTparental"); then
 			zenity --question --text="Êtes vous sûr de vouloir supprimer totalement le filtrage de cet ordinateur ?"
 			apt-get autoremove --purge ctparental clamav-* privoxy dansguardian dnsmasq -y
 			sudo rm -rf /etc/CTparental && rm -rf /etc/dansguardian && rm -rf /etc/squid
