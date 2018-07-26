@@ -158,7 +158,7 @@ fi
 		changerMdp "administrateur" "gestionnaire"
 	;;
 	"Supprimer le filtrage|")
-		/opt/borne/filtrage_remove.sh
+		/opt/borne/scripts/filtrage_remove.sh
 	;;
   esac
 
