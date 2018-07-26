@@ -58,6 +58,7 @@ http://admin.ct.local" ;
 	  --title="Progression de installation" \
 	  --text="Installation du filtrage..." \
 	  --width=500 \
+	  --height=500 \
 	  --percentage=0
 
 	#if [ "$?" = -1 ] ; then
