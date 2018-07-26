@@ -46,13 +46,16 @@ repinstallation="/opt/borne"
 le filtrage par défaut sera activé lors de l’utilisation de Solibuntu.
 
 Vous pourrez configurer celui-ci, si nécessaire, avec le compte administrateur et son mot de passe à l’adresse internet 
+
+Le mot de passe par défaut est \"AdminSolibuntu\" vous pouvez le modifier en changeant le mot de passe administrateur.
+
 http://admin.ct.local" ;
 	echo "99" ; sleep 1
 	)  |
 	zenity --progress \
 	  --title="Progression de installation" \
 	  --text="Installation du filtrage..." \
-	  --width=450 \
+	  --width=500 \
 	  --percentage=0
 
 	#if [ "$?" = -1 ] ; then
