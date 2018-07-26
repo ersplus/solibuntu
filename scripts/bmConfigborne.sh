@@ -55,7 +55,8 @@ elif [ $1 == "administrateur" ] ; then
 			false "Configurer l'ordinateur" \
 			false "Installer le filtrage" \
 			false "Créer une clé USB" \
-			false "Modifier les mots de passe")
+			false "Modifier les mots de passe"\
+			false "Supprimer le filtrage")
 
 fi
 
@@ -155,6 +156,9 @@ fi
 	"Modifier les mots de passe|")
 		# Appel la fonction de changement des mots de passe
 		changerMdp "administrateur" "gestionnaire"
+	;;
+	"Supprimer le filtrage|")
+		/opt/borne/scripts/filtrage_remove.sh
 	;;
   esac
 

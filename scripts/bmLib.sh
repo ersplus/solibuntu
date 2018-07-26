@@ -215,7 +215,7 @@ Les mots de passe doivent respecter les règles suivantes :
             passGest=`echo $entr | cut -d'|' -f3`
             passVerifGest=`echo $entr | cut -d'|' -f4`
             if [ $passAdmin == $passVerifAdmin ] && [ $passGest == $passVerifGest ]; then
-                if [ $passAdmin != $passGest ] ; then
+                if [ "$passAdmin" != "$passGest" ] ; then
                     testSecu $passAdmin
                     if [ $? == 0 ]; then
                         testSecu $passGest
