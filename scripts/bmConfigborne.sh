@@ -53,10 +53,9 @@ elif [ $1 == "administrateur" ] ; then
 			false "Redémarrer l'ordinateur" \
 			false "Mettre à jour et redémarrer" \
 			false "Configurer l'ordinateur" \
-			false "Installer le filtrage" \
+			false "Filtrage" \
 			false "Créer une clé USB" \
-			false "Modifier les mots de passe"\
-			false "Supprimer le filtrage")
+			false "Modifier les mots de passe")
 
 fi
 
@@ -105,19 +104,31 @@ fi
 	service lightdm restart
 	;;
 
-	"Installer le filtrage|")
+	"Filtrage|")
 		# Lance le script d'installation du filtrage
-		cd /opt/borne/scripts/
-        sudo ./filtrage_install.sh
-        if [ $? == 0 ] ; then
-            zenity --info --width=300 --text "Le filtrage a bien été installé \n \
-            Votre ordinateur va redémarrer"
-            #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
-        else
-            zenity --info --width=300 --text "Une erreur s'est produite \n \
-            Votre ordinateur va redémarrer"
-        fi
-        reboot
+		if (test -f "/usr/bin/CTparental"); then
+			zenity --question --text="Un filtrage est installé, désirez-vous le supprimer ?" --ok-label "Oui" --cancel-label="Non"
+			if [ $? == 0 ] ; then
+				/opt/borne/scripts/filtrage_remove.sh
+			else
+				zenity --info --text="Le filtrage n'a pas été désinstallé sur votre système."
+			fi
+		else
+			zenity --question --text="Aucun filtrage n'est installé, désirez-vous en installer un ?" --ok-label "Oui" --cancel-label="Non"
+			if [ $? == 0 ] ; then
+				/opt/borne/scripts/filtrage_install.sh
+		        if [ $? == 0 ] ; then
+		            zenity --info --width=300 --text "Le filtrage a bien été installé \n \
+Votre ordinateur va redémarrer"
+		            #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
+		        else
+		            zenity --info --width=300 --text "Une erreur s'est produite \n \
+Votre ordinateur va redémarrer"
+		        fi
+        		reboot
+			else
+				zenity --info --text="Le filtrage n'a pas été installé sur votre système."
+			fi
 	;;
 
 	"Créer une clé USB|")	
@@ -156,9 +167,6 @@ fi
 	"Modifier les mots de passe|")
 		# Appel la fonction de changement des mots de passe
 		changerMdp "administrateur" "gestionnaire"
-	;;
-	"Supprimer le filtrage|")
-		/opt/borne/scripts/filtrage_remove.sh
 	;;
   esac
 
