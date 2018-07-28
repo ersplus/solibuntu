@@ -44,12 +44,6 @@ if [ $? == 0 ] ; then
 	echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n ModuleName=script \n \n [script] \n ImageDir=/usr/share/plymouth/themes/solibuntu \n ScriptFile=/usr/share/plymouth/themes/solibuntu/solibuntu.script \n" > /usr/share/plymouth/themes/default.plymouth
 
 	#-------------------------------------------------------
-	# Copie profil de base dans Skel
-	#-------------------------------------------------------
-
-	# À FAIRE
-
-	#-------------------------------------------------------
 	# Création du compte gestionnaire
 	#-------------------------------------------------------
 
