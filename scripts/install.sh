@@ -1,10 +1,10 @@
 #! /bin/bash
 
 ### Projet Solisol.org               ###
-### Solibuntu dev                    ###
-### Installation Solibuntu dev       ###
-### 28/04/2018                       ###
-### master 							 ###
+### Solibuntu Master                 ###
+### Installation Solibuntu Master    ###
+### 28/07/2018                       ###
+### master 		             ###
 
 repinstallation="/opt/borne"
 
