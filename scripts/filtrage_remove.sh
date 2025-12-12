@@ -23,11 +23,13 @@ USE_ZENITY=0
 if command -v zenity >/dev/null 2>&1 && [ -n "$DISPLAY" ]; then
   USE_ZENITY=1
 fi
-3
 
-
-
-    return 0
+# Confirmation prompt function
+confirm() {
+  local prompt="${1:-Confirmer ?}"
+  if [ "$USE_ZENITY" -eq 1 ]; then
+    zenity --question --title="Confirmation" --text="$prompt" 2>/dev/null
+    return $?
   else
     read -r -p "$prompt [y/N]: " ans
     case "$ans" in

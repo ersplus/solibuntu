@@ -18,18 +18,17 @@ repinstallation="/opt/borne"
 
 repinstallation="/opt/borne"
 
-# largeur de l'écran
-largeurEcran=$(xwininfo -root | awk '$1=="Width:" {print $2}')
-
-# Hauteur de l'écran
-hauteurEcran=$(xwininfo -root | awk '$1=="Height:" {print $2}')
+# Cache screen dimensions to avoid multiple xwininfo calls
+screenInfo=$(xwininfo -root)
+largeurEcran=$(echo "$screenInfo" | awk '$1=="Width:" {print $2}')
+hauteurEcran=$(echo "$screenInfo" | awk '$1=="Height:" {print $2}')
 
 # ======================================================================
 # Ecran configuration
 # ======================================================================
 
 # Choix gestionnaire
-if [ "$1" == "gestionnaire" ] ; then
+if [ "$1" = "gestionnaire" ] ; then
 	reponse=$(yad --width="$largeurEcran" --height="$hauteurEcran" \
 			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
 			--image=info --image-on-top \
@@ -41,7 +40,7 @@ if [ "$1" == "gestionnaire" ] ; then
 			false "Configurer l'ordinateur" \
 			false "Créer une clé USB")
 # Choix administrateur
-elif [ "$1" == "administrateur" ] ; then
+elif [ "$1" = "administrateur" ] ; then
 	reponse=$(yad --width="$largeurEcran" --height="$hauteurEcran" \
 			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
 			--image=info --image-on-top \
@@ -106,7 +105,7 @@ case ${reponse} in
 		# Lance le script d'installation du filtrage
 		cd "$repinstallation/scripts/" || exit 1
         sudo ./filtrage_install.sh
-        if [ $? == 0 ] ; then
+        if [ $? = 0 ] ; then
             zenity --info --width=300 --text "Le filtrage a bien été installé \n \
             Votre ordinateur va redémarrer"
         else
