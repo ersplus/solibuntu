@@ -71,9 +71,9 @@ getFirstID
 screenInfo=$(xwininfo -root)
 largeurEcran=$(echo "$screenInfo" | awk '$1=="Width:" {print $2}')
 hauteurEcran=$(echo "$screenInfo" | awk '$1=="Height:" {print $2}')
-#pointX=$(echo $((($largeurEcran-500)/2)))
+#pointX=$(( (largeurEcran-500)/2 ))
 pointX="0"
-pointY=$(echo $((($hauteurEcran-300)/1)))
+pointY=$(( hauteurEcran-300 ))
 
 nohup feh -ZFx /opt/borne/share/background.png &
 #nohup xterm &

@@ -44,10 +44,10 @@ Ce dispositif de filtrage (CTParental) sera ensuite configurable par l’adminis
 http://admin.ct.local
 Désirez-vous installer cette solution ?' \
 --ok-label "Oui" --cancel-label="Non"
-            if [ $? == 0 ] ; then
-                cd /opt/borne/scripts/
+            if [ $? = 0 ] ; then
+                cd /opt/borne/scripts/ || exit
                 sudo ./filtrage_install.sh
-                if [ $? == 0 ] ; then
+                if [ $? = 0 ] ; then
                     zenity --info --width=300 --text "Le filtrage a bien été installé
 L’ordinateur va redémarrer pour finaliser l’installation"
                     #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
@@ -102,7 +102,7 @@ getUniqID() {
 pErr() {
     lvl="${1}"
     shift
-    mess="${@}"
+    mess="${*}"
 
     niv='notice'
     case ${lvl} in
@@ -160,10 +160,11 @@ testDispo() {
     utilisateur="administrateur"
     pass=$1
     testMdp $utilisateur $pass
-    if [ $? = 0 ]; then
+    ret=$?
+    if [ $ret = 0 ]; then
         # Le mot de passe est celui de l'administrateur
         return 1
-    elif [ $? = 1 ]; then
+    elif [ $ret = 1 ]; then
         # Le mot de passe n'est pas celui de l'administrateur
         return 0
     fi

@@ -78,7 +78,7 @@ case ${reponse} in
 		echo "# Maj Solibuntu"
 		echo "90" ;
 			# Lance le script d'installation
-			cd /Solibuntu
+			cd /Solibuntu || exit
 			./install.sh maj
 		echo "# Mise à jour" ; apt autoremove --purge -y
 		echo "95" ; sleep 1
