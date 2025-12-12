@@ -34,10 +34,8 @@ Solibuntu est une solution basée sur **Xubuntu 16.04** conçue pour les associa
 2. **Installer les logiciels nécessaires** :
    ```bash
 sudo apt install gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree ttf-alee ttf-ancient-fonts ttf-arabeyes fonts-arphic-bkai00mp fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp ttf-atarismall fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-ukai fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip cups-pdf exfat-fuse exfat-utils chromium-browser imagemagick xsane
-
-
 sudo apt-get install hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr
-   ```
+```
 3. **Configurer l’autologin invité** :
    ```bash
    sudo nano /etc/lightdm/lightdm.conf.d/50-autoguest.conf
