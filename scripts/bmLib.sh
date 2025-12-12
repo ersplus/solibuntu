@@ -87,8 +87,8 @@ getDateTime() {
 # et l'encode en Base 64
 getUniqID() {
     # Use modern ip command instead of deprecated ifconfig
+    # First try to find enp* interface, then fallback to any interface with ether
     mac="$(ip -o link show | awk '/^[0-9]+: enp/ {print $17; exit}' | sed -e 's/:/_/g')"
-    # Fallback to ifconfig if ip command doesn't return results
     if [ -z "$mac" ]; then
         mac="$(ip -o link show | awk '/ether/ {print $17; exit}' | sed -e 's/:/_/g')"
     fi
@@ -177,7 +177,8 @@ testDispo() {
 testSecu() {
     password=$1
     if [ "${#password}" -ge 8 ] ; then
-        # Check all conditions in a single grep call for better performance
+        # Check all conditions efficiently with short-circuit evaluation
+        # Uses && to stop on first failure, avoiding unnecessary grep calls
         if echo "$password" | grep -qE "[a-z]" && \
            echo "$password" | grep -qE "[A-Z]" && \
            echo "$password" | grep -qE "[0-9]"; then
