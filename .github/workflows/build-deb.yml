@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: solibuntu-deb
-          path: /home/runner/work/solibuntu/solibuntu/../*.deb
+          path: ${{ github.workspace }}/../*.deb
 
       - name: Run lintian (info only)
         run: |
