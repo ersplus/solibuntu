@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# repinstallation conservé pour compatibilité future
 repinstallation="/opt/borne"
 
 [ "$(id -u)" -eq 0 ] || exec sudo -E "$0" "$@"

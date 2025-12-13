@@ -65,6 +65,7 @@ xsetroot -cursor_name left_ptr&
 getFirstID
 
 # largeur de l'écran
+# largeurEcran est utilisé pour dimensionner Yad
 largeurEcran=$(xwininfo -root | awk '$1=="Width:" {print $2}')
 
 # Hauteur de l'écran
