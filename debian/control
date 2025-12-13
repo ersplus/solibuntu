@@ -1,0 +1,16 @@
+Source: solibuntu
+Section: admin
+Priority: optional
+Maintainer: Solisol <contact@solisol.org>
+Standards-Version: 4.6.2
+Build-Depends: debhelper-compat (= 13)
+Homepage: https://solisol.org
+
+Package: solibuntu
+Architecture: all
+Depends: ${misc:Depends}, zenity, yad, feh, dmidecode, iproute2, plymouth, lightdm | sddm, gdebi-core | dpkg, dconf-cli
+Recommends: hplip, printer-driver-hpcups
+Description: Solibuntu - configuration et environnement pour Xubuntu 24.04
+ Installe les fichiers sous /opt/borne et applique la configuration
+ (LightDM, autostart, plymouth, sudoers, Firefox paquet). CTparental
+ peut être installé séparément via les scripts fournis.

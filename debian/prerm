@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+# Restore Firefox prefs if backup exists
+if [ -f /etc/firefox/syspref.js.back ]; then
+  mv /etc/firefox/syspref.js.back /etc/firefox/syspref.js || true
+fi
+
+exit 0
