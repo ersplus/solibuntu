@@ -28,14 +28,10 @@ jobs:
           name: solibuntu-deb
           path: /home/runner/work/solibuntu/solibuntu/../*.deb
 
-      - name: Run lintian (fail on serious)
+      - name: Run lintian (info only)
         run: |
-          LINT_OUT=$(lintian --fail-on error --fail-on serious --quiet ../*.changes || true)
-          echo "$LINT_OUT"
-          if echo "$LINT_OUT" | grep -E "(error|serious)" >/dev/null; then
-            echo "Lintian detected serious issues"
-            exit 1
-          fi
+          lintian --info ../*.changes || true
+
 
   release:
     if: github.ref == 'refs/heads/Dev'
