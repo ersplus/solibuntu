@@ -44,10 +44,10 @@ Ce dispositif de filtrage (CTParental) sera ensuite configurable par l’adminis
 http://admin.ct.local
 Désirez-vous installer cette solution ?' \
 --ok-label "Oui" --cancel-label="Non"
-            if [ $? = 0 ] ; then
-                cd /opt/borne/scripts/ || exit
+            if [ $? == 0 ] ; then
+                cd /opt/borne/scripts/
                 sudo ./filtrage_install.sh
-                if [ $? = 0 ] ; then
+                if [ $? == 0 ] ; then
                     zenity --info --width=300 --text "Le filtrage a bien été installé
 L’ordinateur va redémarrer pour finaliser l’installation"
                     #zenity --info --width=300 --text "Votre ordinateur va redémarrer"
@@ -79,20 +79,16 @@ L'ordinateur va redémarrer."
 # ======================================================================
 
 getDateTime() {
-    atDate=$(date +%Y%m%d_%H%M%S)
+    atDate=`date +%Y%m%d_%H%M%S`
     echo "${atDate}"
 }
 
 # Cree un identifiant unique a partir de l'adresse MAC de la carte reseau
 # et l'encode en Base 64
 getUniqID() {
-    # Use modern ip command instead of deprecated ifconfig
-    # First try to find enp* interface, then fallback to any interface with ether
-    mac="$(ip -o link show | awk '/^[0-9]+: enp/ {print $17; exit}' | sed -e 's/:/_/g')"
-    if [ -z "$mac" ]; then
-        mac="$(ip -o link show | awk '/ether/ {print $17; exit}' | sed -e 's/:/_/g')"
-    fi
-    mac64=$(echo "${mac}" | base64 -)
+    mac="`/sbin/ifconfig | grep enp | grep HWaddr | awk '{print $NF}' | sed -e 's/:/_/g'`"
+    mac64=`echo "${mac}" | base64 -`
+    #nohup xterm &
     echo "${mac64}"
 }
 
@@ -102,7 +98,7 @@ getUniqID() {
 pErr() {
     lvl="${1}"
     shift
-    mess="${*}"
+    mess="${@}"
 
     niv='notice'
     case ${lvl} in
@@ -135,11 +131,11 @@ testMdp() {
 
     if [ $? = 0 ]
     then
-        CRYPTPASS=$(grep -w "$utilisateur" /etc/shadow | cut -d: -f2)
-        export ALGO=$(echo $CRYPTPASS | cut -d'$' -f2)
-        export SALT=$(echo $CRYPTPASS | cut -d'$' -f3)
+        CRYPTPASS=`grep -w "$utilisateur" /etc/shadow | cut -d: -f2`
+        export ALGO=`echo $CRYPTPASS | cut -d'$' -f2`
+        export SALT=`echo $CRYPTPASS | cut -d'$' -f3`
         PASS=$(perl -le 'print crypt("$ENV{MDP}", "\$$ENV{ALGO}\$$ENV{SALT}\$")')
-        if [ "$PASS" = "$CRYPTPASS" ]
+        if [ "$PASS" == "$CRYPTPASS" ]
         then
             # L'identifiant et le mot de passe correspondent
             return 0
@@ -160,11 +156,10 @@ testDispo() {
     utilisateur="administrateur"
     pass=$1
     testMdp $utilisateur $pass
-    ret=$?
-    if [ $ret = 0 ]; then
+    if [ $? == 0 ]; then
         # Le mot de passe est celui de l'administrateur
         return 1
-    elif [ $ret = 1 ]; then
+    elif [ $? == 1 ]; then
         # Le mot de passe n'est pas celui de l'administrateur
         return 0
     fi
@@ -177,17 +172,24 @@ testDispo() {
 testSecu() {
     password=$1
     if [ "${#password}" -ge 8 ] ; then
-        # Check all conditions efficiently with short-circuit evaluation
-        # Uses && to stop on first failure, avoiding unnecessary grep calls
-        if echo "$password" | grep -qE "[a-z]" && \
-           echo "$password" | grep -qE "[A-Z]" && \
-           echo "$password" | grep -qE "[0-9]"; then
-            # Le mot de passe est sécurisé
-            return 0
-        else
+        echo "$password" | grep -E "[a-z]"
+        if [ $? == 1 ] ; then
             # Le mot de passe est incorrect
             return 1
         fi
+        echo "$password" | grep -E "[A-Z]"
+        if [ $? == 1 ] ; then
+            # Le mot de passe est incorrect
+            echo "C'est pas correct !"
+            return 1
+        fi
+        echo "$password" | grep -E "[0-9]"
+        if [ $? == 1 ] ; then
+            # Le mot de passe est incorrect
+            return 1
+        fi
+        # Le mot de passe est sécurisé
+        return 0
     else
         # Le mot de passe est incorrect
         return 1
@@ -195,8 +197,8 @@ testSecu() {
 }
 
 changerMdp() {
-    if [ $# = 2 ] ; then
-        entr=$(zenity --forms \
+    if [ $# == 2 ] ; then
+        entr=`zenity --forms \
         --title="Changement des mot de passe" \
         --text="Modification du mot de passe administrateur et gestionnaire
 Les mots de passe doivent respecter les règles suivantes : 
@@ -205,25 +207,25 @@ Les mots de passe doivent respecter les règles suivantes :
         --add-password="Confirmer le mot de passe" \
         --add-password="Nouveau mot de passe gestionnaire" \
         --add-password="Confirmer le mot de passe" \
-        --separator="|")
+        --separator="|"`
                             
-        if [ $? = 0 ]; then
-            passAdmin=$(echo $entr | cut -d'|' -f1)
-            passVerifAdmin=$(echo $entr | cut -d'|' -f2)
-            passGest=$(echo $entr | cut -d'|' -f3)
-            passVerifGest=$(echo $entr | cut -d'|' -f4)
-            if [ "$passAdmin" = "$passVerifAdmin" ] && [ "$passGest" = "$passVerifGest" ]; then
+        if [ $? == 0 ]; then
+            passAdmin=`echo $entr | cut -d'|' -f1`
+            passVerifAdmin=`echo $entr | cut -d'|' -f2`
+            passGest=`echo $entr | cut -d'|' -f3`
+            passVerifGest=`echo $entr | cut -d'|' -f4`
+            if [ $passAdmin == $passVerifAdmin ] && [ $passGest == $passVerifGest ]; then
                 if [ "$passAdmin" != "$passGest" ] ; then
                     testSecu $passAdmin
-                    if [ $? = 0 ]; then
+                    if [ $? == 0 ]; then
                         testSecu $passGest
-                        if [ $? = 0 ]; then
+                        if [ $? == 0 ]; then
                             zenity --question --width=250 --text "Voulez-vous vraiment modifier les mots de passe administrateur et gestionnaire ?"
-                            if [ $? = 0 ] ; then
-                                if [ "$passGest" != "" ] ; then
+                            if [ $? == 0 ] ; then
+                                if [ $passGest != "" ] ; then
                                     echo -e "$passGest\n$passGest" | passwd gestionnaire
                                 fi
-                                if [ "$passAdmin" != "" ] ; then
+                                if [ $passAdmin != "" ] ; then
                                     echo -e "$passAdmin\n$passAdmin" | passwd administrateur
                                     CTparental -setadmin administrateur $passAdmin
                                 fi
@@ -245,25 +247,25 @@ En cas de perte ou d’oubli du mot de passe de l’administrateur, il sera néc
                 zenity --info --width=300 --text="Les mots de passe et leurs confirmation ne correspondent pas !"
             fi
         fi
-    elif [ $# = 1 ]; then
-        entr=$(zenity --forms \
+    elif [ $# == 1 ]; then
+        entr=`zenity --forms \
         --title="Changement du mot de passe" \
         --text="Définir un nouveau mot de passe $1" \
         --add-password="Nouveau mot de passe $1" \
         --add-password="Confirmer le mot de passe" \
-        --separator="|")
+        --separator="|"`
 
-        if [ $? = 0 ]; then
-            pass=$(echo $entr | cut -d'|' -f1)
-            passVerif=$(echo $entr | cut -d'|' -f2)
-            if [ "$pass" = "$passVerif" ] ; then
+        if [ $? == 0 ]; then
+            pass=`echo $entr | cut -d'|' -f1`
+            passVerif=`echo $entr | cut -d'|' -f2`
+            if [ $pass == $passVerif ] ; then
                 testSecu $pass
-                if [ $? = 0 ]; then
+                if [ 0 == 0 ]; then
                     zenity --question --width=300 --text "Voulez-vous vraiment modifier le mot de passe $1 ?"
-                    if [ $? = 0 ] ; then
-                        if [ "$pass" != "" ] ; then
+                    if [ $? == 0 ] ; then
+                        if [ $pass != "" ] ; then
                             echo -e "$pass\n$pass" | passwd $1
-                            if [ "$1" = "administrateur" ] ; then
+                            if [ $1 == "administrateur" ] ; then
                                 CTparental -setadmin administrateur $pass
                             fi
                             zenity --info --width=300 --text="Le mot de passe $1 a été modifié avec succès"
