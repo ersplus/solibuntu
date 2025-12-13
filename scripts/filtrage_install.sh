@@ -1,91 +1,71 @@
 #!/bin/bash
-set -euo pipefail
+
+#-------------------------------------------------------
+# Installation filtrage
+#-------------------------------------------------------
+installFiltrage() {
+	#wget wget https://gitlab.com/marsat/CTparental/uploads/53e32309e587aa7d61447d9f9adc9981/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb -O /opt/borne/share/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb
+	#sudo dpkg -i /opt/borne/share/ctparental_ubuntu16.04_4.21.06-1.0_all.deb
+	#gdebi-gtk -n --auto-close /opt/borne/share/ctparental_debian9_ubuntu17.xx_18.04_4.22.07-1.0_all.deb
+	#cp /opt/borne/share/prefs.js /home/administrateur/.mozilla/firefox/*.default/
+	#cp /opt/borne/share/prefs.js /home/gestionnaire/.mozilla/firefox/*.default/
+	
+	if [ -f /root/.filtragepurged ] ; then
+		while read line; do
+			echo $line
+			echo $line | debconf-set-selections
+		done < /opt/borne/share/setselection.txt
+		rm /root/.filtragepurged
+	fi
+
+	mv /etc/firefox/syspref.js /etc/firefox/syspref.js.back
+	cp /opt/borne/share/prefs.js /etc/firefox/syspref.js
+	gdebi-gtk -n --auto-close /opt/borne/share/ctparental.deb
+	return $?
+	#cp -rf /opt/borne/share/CTparental /usr/bin/CTparental
+}
+
+# ======================================================================
+# Script d'installation du filtrage
+# ======================================================================
 
 repinstallation="/opt/borne"
 
-# Assurez-vous d'être root ; sinon relancer avec sudo
-if [ "$(id -u)" -ne 0 ]; then
-  echo "Relance avec sudo..." >&2
-  exec sudo "$0" "$@"
-fi
+[ `whoami` = root ] || { gksudo "$0" "$@"; exit $?; }
 
-install_ctparental() {
-  local deb
-  deb="$repinstallation/share/ctparental.deb"
+(
+	echo "10" ; sleep 1
+	echo "# Vérification des mises à jour" ; sudo apt update
+	echo "20" ; sleep 1
+	echo "# Application des mises à jour" ; sudo apt upgrade -y
+	echo "30" ; sleep 1
+	echo "# Mise à jour" ; sudo apt clean
+	echo "40" ; sleep 1
+	echo "# Installation debconf-utils" ;  sudo apt-get install debconf-utils
+	echo "50" ; sleep 1
+	#echo "# Installation des dépendances"; sudo apt-get install -y clamav clamav-base clamav-freshclam console-data dansguardian dnsmasq gamin iptables-persistent libclamav7 libgamin0 libllvm3.6v5 liblua5.1-0 libnss3-tools lighttpd lighttpd-mod-magnet netfilter-persistent php-cgi php-common php-xml php7.0-cgi php7.0-cli php7.0-common php7.0-json php7.0-opcache php7.0-readline php7.0-xml privoxy spawn-fcgi
+	#echo "60" ; sleep 1
+	echo "# Installation filtrage"; installFiltrage
+	result=$?
+	echo "70" ; sleep 1
+	#echo "# Configuation du proxy" ; sudo cp -rf /opt/borne/share/proxy/defaulton /etc/chromium-browser/default
+	echo "80" ; sleep 1
+	echo "# Le filtrage internet a été installé avec succès, le filtrage par défaut sera activé lors de l’utilisation de Solibuntu. Vous pourrez configurer celui-ci, si nécessaire, avec le compte administrateur. Le mot de passe par défaut est : AdminSolibuntu. Vous pouvez le modifier en changeant le mot de passe administrateur, une fois ceci fait, le mot de passe du filtrage correspondra au nouveau mot de passe du compte administrateur. Rendez-vous à cette adresse pour pouvoir configurer le filtrage : http://admin.ct.local" ;
+	echo "99" ; sleep 1
+	)  |
+	zenity --progress \
+	  --title="Progression de installation" \
+	  --text="Installation du filtrage..." \
+	  --width=500 \
+	  --percentage=0
 
-  # Appliquer les debconf selections si présentes
-  if [ -f "$repinstallation/share/setselection.txt" ] && command -v debconf-set-selections >/dev/null 2>&1; then
-    while IFS= read -r line; do
-      echo "$line" | debconf-set-selections
-    done < "$repinstallation/share/setselection.txt"
-  fi
+	#if [ "$?" = -1 ] ; then
+	#	zenity --error --text="Installation annulée."
+	#fi
+	return $result
+exit 0
 
-  # Si le paquet local n'existe pas, tenter un téléchargement de secours
-  if [ ! -f "$deb" ]; then
-    echo "Paquet local CTparental introuvable: $deb"
-    # URL de secours — adapter si vous avez une URL officielle pour bionic
-    CT_URL="https://gitlab.com/marsat/CTparental/-/releases/latest/download/ctparental_bionic_all.deb"
-    mkdir -p "$repinstallation/share"
-    if command -v curl >/dev/null 2>&1; then
-      if ! curl -fSL -o "$deb" "$CT_URL"; then
-        echo "Échec du téléchargement depuis $CT_URL" >&2
-        return 2
-      fi
-    elif command -v wget >/dev/null 2>&1; then
-      if ! wget -O "$deb" "$CT_URL"; then
-        echo "Échec du téléchargement depuis $CT_URL" >&2
-        return 2
-      fi
-    else
-      echo "Ni curl ni wget disponibles pour télécharger CTparental" >&2
-      return 2
-    fi
-  fi
 
-  # Installer gdebi-core pour installation non interactive si besoin
-  if ! dpkg -s gdebi-core >/dev/null 2>&1; then
-    apt-get update -y || true
-    apt-get install -y gdebi-core || true
-  fi
 
-  # Installer le paquet avec gdebi si présent, sinon dpkg + apt-get -f install
-  if command -v gdebi >/dev/null 2>&1; then
-    gdebi -n "$deb"
-    return $?
-  else
-    if dpkg -i "$deb"; then
-      return 0
-    else
-      apt-get install -f -y
-      dpkg -i "$deb" || return 3
-    fi
-  fi
-}
+# sudo apt-get install clamav clamav-base clamav-freshclam console-data dansguardian dnsmasq gamin iptables-persistent libclamav7 libgamin0 libllvm3.6v5 liblua5.1-0 libnss3-tools lighttpd lighttpd-mod-magnet netfilter-persistent php-cgi php-common php-xml php7.0-cgi php7.0-cli php7.0-common php7.0-json php7.0-opcache php7.0-readline php7.0-xml privoxy spawn-fcgi
 
-main() {
-  local result=0
-
-  (
-    echo "10"
-    echo "# Vérification des mises à jour"
-    apt update -y >/dev/null 2>&1 || true
-    echo "30"
-    echo "# Installation des dépendances requises"
-    apt-get install -y debconf-utils curl >/dev/null 2>&1 || true
-    echo "50"
-    echo "# Installation CTparental"
-    install_ctparental
-    result=$?
-    echo "80"
-    if [ "$result" -eq 0 ]; then
-      echo "# Installation terminée avec succès"
-    else
-      echo "# Erreur lors de l'installation (code $result)"
-    fi
-    echo "99"
-  ) | zenity --progress --title="Progression de installation" --text="Installation du filtrage..." --width=500 --percentage=0
-
-  return $result
-}
-
-main "$@"
