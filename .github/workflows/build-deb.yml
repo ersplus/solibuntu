@@ -1,0 +1,58 @@
+name: Build Debian Package
+
+on:
+  push:
+    branches: [ Dev ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y devscripts debhelper lintian build-essential
+
+      - name: Build .deb
+        run: |
+          debuild -us -uc
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: solibuntu-deb
+          path: ../*.deb
+
+  release:
+    if: github.ref == 'refs/heads/Dev'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: solibuntu-deb
+          path: dist
+      - name: Create tag
+        id: tag
+        run: |
+          DATE_TAG=$(date +'%Y%m%d-%H%M%S')
+          echo "tag=v1.0.0-dev-${DATE_TAG}" >> $GITHUB_OUTPUT
+      - name: Create GitHub Release (pre-release)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "Solibuntu Dev Release ${{ steps.tag.outputs.tag }}"
+          draft: false
+          prerelease: true
+          files: |
+            dist/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
