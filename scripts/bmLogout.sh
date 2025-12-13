@@ -10,7 +10,7 @@ repinstallation="/opt/borne"
 # On vérifie la valeur contenue dans le fichier lastadminlogin
 # Si 1 alors la dernière session était admin
 
-adminConnect=cat /root/.lastadminlogin
+# Le fichier /root/.lastadminlogin est géré par sessionStart.sh ; aucune lecture nécessaire ici
 
 # Test
 # Si la valeur est de 1 alors

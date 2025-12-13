@@ -48,7 +48,8 @@ filter_available_packages() {
 }
 
 install_if_available() {
-	local packages=($(filter_available_packages "$@"))
+	local packages=()
+	mapfile -t packages < <(filter_available_packages "$@")
 	if [ ${#packages[@]} -gt 0 ]; then
 		apt-get install -y "${packages[@]}"
 	fi
@@ -92,7 +93,7 @@ chmod +rx "$repinstallation/scripts/bmGuestwrapper.sh"
 chmod +rx "$repinstallation/share/charte.html"
 
 # Personnalisation Plymouth
-cd /usr/share/plymouth/themes/
+cd /usr/share/plymouth/themes/ || exit
 tar -xvf "$repinstallation/share/plymouth.tar.gz"
 echo "[Plymouth Theme] \n Name=solibuntu \n Description=Solibuntu theme \n ModuleName=script \n \n [script] \n ImageDir=/usr/share/plymouth/themes/solibuntu \n ScriptFile=/usr/share/plymouth/themes/solibuntu/solibuntu.script \n" > /usr/share/plymouth/themes/default.plymouth
 
@@ -203,7 +204,7 @@ cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart/sessionStart.deskt
 if [ "$action" != "maj" ]; then
 	cp /opt/borne/share/skel_admin.tar.gz /home/
 	cp /opt/borne/share/skel_gest.tar.gz /home/
-	cd /home/
+	cd /home/ || exit
 	rm -rf gestionnaire/
 	tar -xvzf skel_gest.tar.gz
 	rm -rf administrateur/

@@ -12,8 +12,8 @@ getFirstID() {
     if [ ! -f /root/.uniqID ] ;then
         ret=1
         while [ $ret -eq 1 ]; do
-            ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Bienvenue dans l’assistant de démarrage de Solibuntu. 
-Pour commencer la configuration, veuillez saisir le nom de l’association : 
+            ans=$(zenity  --forms --title "Mise en route" --text  "Mise en route" --add-entry "Bienvenue dans l'assistant de démarrage de Solibuntu. 
+Pour commencer la configuration, veuillez saisir le nom de l'association : 
 ")
             ret=$?
             if [ $ret -eq 0 ];then
@@ -25,9 +25,9 @@ Pour commencer la configuration, veuillez saisir le nom de l’association :
 
             zenity --width=550 --height=50 --question --text="Deux mots de passe sont nécessaires pour utiliser et personnaliser Solibuntu. Ils sont définis par défaut :
 
-- Pour l’administrateur, responsable du poste : AdminSolibuntu
+- Pour l'administrateur, responsable du poste : AdminSolibuntu
 
-- Pour le gestionnaire, qui pourra modifier l’environnement de l’utilisateur : AdminAsso
+- Pour le gestionnaire, qui pourra modifier l'environnement de l'utilisateur : AdminAsso
 
 Ces mots de passes sont confidentiels, ils ne seront plus communiqués ultérieurement.
 Afin de garantir la sécurité de votre installation, désirez-vous modifier maintenant ces mots de passe ?  " \
@@ -36,16 +36,16 @@ Afin de garantir la sécurité de votre installation, désirez-vous modifier mai
                 changerMdp "administrateur" "gestionnaire"
             fi
 
-            zenity --question --width=450 --text 'Pour répondre aux contraintes de sécurité, il est nécessaire de bloquer les sites inappropriés (sites pour adultes, agressif, drogue, téléchargement illégaux, …).
+            zenity --question --width=450 --text "Pour répondre aux contraintes de sécurité, il est nécessaire de bloquer les sites inappropriés (sites pour adultes, agressif, drogue, téléchargements illégaux, ...).
 
-Si votre association ne dispose d’aucun dispositif pour bloquer ces sites, Solibuntu peut installer une solution logicielle pour les filtrer.
+Si votre association ne dispose d'aucun dispositif pour bloquer ces sites, Solibuntu peut installer une solution logicielle pour les filtrer.
 
-Ce dispositif de filtrage (CTParental) sera ensuite configurable par l’administrateur en utilisant ses identifiants via l’adresse internet 
+Ce dispositif de filtrage (CTParental) sera ensuite configurable par l'administrateur en utilisant ses identifiants via l'adresse internet 
 http://admin.ct.local
-Désirez-vous installer cette solution ?' \
+Désirez-vous installer cette solution ?" \
 --ok-label "Oui" --cancel-label="Non"
             if [ $? == 0 ] ; then
-                cd /opt/borne/scripts/
+                cd /opt/borne/scripts/ || exit
                 sudo ./filtrage_install.sh
                 if [ $? == 0 ] ; then
                     zenity --info --width=300 --text "Le filtrage a bien été installé
@@ -100,7 +100,7 @@ getUniqID() {
 pErr() {
     lvl="${1}"
     shift
-    mess="${@}"
+    mess="$*"
 
     niv='notice'
     case ${lvl} in
@@ -133,9 +133,11 @@ testMdp() {
 
     if [ $? = 0 ]
     then
-        CRYPTPASS=`grep -w "$utilisateur" /etc/shadow | cut -d: -f2`
-        export ALGO=`echo $CRYPTPASS | cut -d'$' -f2`
-        export SALT=`echo $CRYPTPASS | cut -d'$' -f3`
+        CRYPTPASS=$(grep -w "$utilisateur" /etc/shadow | cut -d: -f2)
+        ALGO=$(echo "$CRYPTPASS" | cut -d'$' -f2)
+        export ALGO
+        SALT=$(echo "$CRYPTPASS" | cut -d'$' -f3)
+        export SALT
         PASS=$(perl -le 'print crypt("$ENV{MDP}", "\$$ENV{ALGO}\$$ENV{SALT}\$")')
         if [ "$PASS" == "$CRYPTPASS" ]
         then
@@ -158,10 +160,11 @@ testDispo() {
     utilisateur="administrateur"
     pass=$1
     testMdp $utilisateur $pass
-    if [ $? == 0 ]; then
+    res=$?
+    if [ $res == 0 ]; then
         # Le mot de passe est celui de l'administrateur
         return 1
-    elif [ $? == 1 ]; then
+    elif [ $res == 1 ]; then
         # Le mot de passe n'est pas celui de l'administrateur
         return 0
     fi
@@ -262,7 +265,7 @@ En cas de perte ou d’oubli du mot de passe de l’administrateur, il sera néc
             passVerif=`echo $entr | cut -d'|' -f2`
             if [ $pass == $passVerif ] ; then
                 testSecu $pass
-                if [ 0 == 0 ]; then
+                if [ $? -eq 0 ]; then
                     zenity --question --width=300 --text "Voulez-vous vraiment modifier le mot de passe $1 ?"
                     if [ $? == 0 ] ; then
                         if [ $pass != "" ] ; then
