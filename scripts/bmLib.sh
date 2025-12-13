@@ -86,9 +86,11 @@ getDateTime() {
 # Cree un identifiant unique a partir de l'adresse MAC de la carte reseau
 # et l'encode en Base 64
 getUniqID() {
-    mac="`/sbin/ifconfig | grep enp | grep HWaddr | awk '{print $NF}' | sed -e 's/:/_/g'`"
-    mac64=`echo "${mac}" | base64 -`
-    #nohup xterm &
+    mac=$(ip -o link show | awk '/link\/ether/ {print $17; exit}' | sed -e 's/:/_/g')
+    if [ -z "$mac" ] && [ -f /sys/class/net/eth0/address ]; then
+        mac=$(tr ':' '_' </sys/class/net/eth0/address)
+    fi
+    mac64=$(printf "%s" "${mac:-unknown}" | base64 -)
     echo "${mac64}"
 }
 

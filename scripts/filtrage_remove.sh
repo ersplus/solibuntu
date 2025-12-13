@@ -6,25 +6,32 @@
 
 repinstallation="/opt/borne"
 
-
-[ `whoami` = root ] || { gksudo "$0" "$@"; exit $?; }
+[ "$(id -u)" -eq 0 ] || exec sudo -E "$0" "$@"
 
 # ======================================================================
-# test de présence du filtrage
+# Suppression du filtrage
 # ======================================================================
 
+apt-get autoremove --purge ctparental clamav-* privoxy dansguardian dnsmasq -y || true
+rm -rf /etc/CTparental /etc/dansguardian /etc/squid
+apt-get autoremove -y || true
 
-apt-get autoremove --purge ctparental clamav-* privoxy dansguardian dnsmasq -y
-sudo rm -rf /etc/CTparental && rm -rf /etc/dansguardian && rm -rf /etc/squid
-sudo apt-get autoremove	
-sudo cp -rf /opt/borne/share/proxy/defaultoff /etc/chromium-browser/default
-rm /etc/firefox/syspref.js
-mv /etc/firefox/syspref.js.back /etc/firefox/syspref.js
+if [ -d /etc/chromium-browser ]; then
+	cp -rf "$repinstallation/share/proxy/defaultoff" /etc/chromium-browser/default
+fi
+
+if [ -f /etc/firefox/syspref.js ]; then
+	rm /etc/firefox/syspref.js
+fi
+if [ -f /etc/firefox/syspref.js.back ]; then
+	mv /etc/firefox/syspref.js.back /etc/firefox/syspref.js
+fi
+
 # Message d'information
 zenity --info="Le filtrage a été supprimé. L'ordinateur va redémarrer"
+
 # Redémarrage
 touch /root/.filtragepurged
 reboot
-
 
 exit 0
