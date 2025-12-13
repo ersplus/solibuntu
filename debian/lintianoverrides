@@ -1,3 +1,12 @@
-solibuntu: dir-or-file-in-opt opt/borne/
+solibuntu: dir-or-file-in-opt [opt/borne/.*]
+solibuntu: executable-not-elf-or-script [opt/borne/.*\.conf$]
+solibuntu: executable-not-elf-or-script [opt/borne/.*\.html$]
+solibuntu: executable-not-elf-or-script [opt/borne/.*\.xcf$]
+solibuntu: executable-not-elf-or-script [opt/borne/.*\.txt$]
+solibuntu: executable-not-elf-or-script [opt/borne/.*\.tar\.]
+solibuntu: executable-not-elf-or-script [opt/borne/.*\.py$]
+solibuntu: executable-not-elf-or-script [opt/borne/.*\.gz$]
+solibuntu: shell-script-fails-syntax-check [opt/borne/scripts/bmConfigborne.sh]
 solibuntu source: missing-debian-source-format
 solibuntu source: no-debian-copyright-in-source
+solibuntu source: source-is-missing

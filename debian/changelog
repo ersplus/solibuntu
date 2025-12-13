@@ -4,4 +4,4 @@ solibuntu (1.0.0) noble; urgency=medium
   * Installation des scripts et partages sous /opt/borne
   * Postinst applique la configuration système (LightDM, autostart, sudoers, plymouth)
 
- -- Solisol <contact@solisol.org>  Fri, 13 Dec 2025 14:30:00 +0000
+ -- Solisol <contact@solisol.org>  Sat, 13 Dec 2025 14:30:00 +0000
