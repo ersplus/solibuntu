@@ -19,6 +19,12 @@ Une fois le filtrage installé, il est accessible depuis l'URL https://admin.ct.
 - Installer Solibuntu: `sudo /opt/borne/scripts/install.sh installation`
 - Filtrage (optionnel): `sudo /opt/borne/scripts/filtrage_install.sh` puis, si besoin, `sudo /opt/borne/scripts/filtrage_remove.sh`
 
+### Installation via paquet .deb
+- Téléchargez le .deb depuis les pré-releases Dev (voir la section Releases du dépôt).
+- Installez le paquet:
+	- `sudo dpkg -i solibuntu_1.0.0_all.deb || sudo apt -f install`
+- Vérifications: LightDM, autostart, plymouth, comptes utilisateurs, Firefox (paquet vs snap).
+
 ### Check-list de validation 24.04
 - LightDM: fichiers copiés dans `/etc/lightdm/lightdm.conf.d/`, greeter configuré.
 - Autostart: `sessionStart.desktop` présent dans `/etc/xdg/autostart/`.
