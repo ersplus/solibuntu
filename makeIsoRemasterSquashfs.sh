@@ -57,7 +57,7 @@ log_error() {
 
 # Choix de la branche pour générer l'ISO
 log_info "Sélection de la version..."
-choix=$(zenity --list --radiolist --column "Choix" --column "Version" FALSE "Master" FALSE "Dev" --title="Solibuntu 24.04 - Génération ISO")
+choix=$(zenity --list --radiolist --column "Choix" --column "Version" FALSE "Main" FALSE "Dev" --title="Solibuntu 24.04 - Génération ISO")
 
 # Définit dans quel dossier est exécuté le script : dossier courant
 local=$(pwd)
@@ -69,7 +69,7 @@ preseed="$local/preseed.cfg"
 txt="$local/txt.cfg"
 
 case "${choix}" in
-	"Master")
+	"Main")
 		postInstall="$local/install_m.sh"
 	;;
 	"Dev")
@@ -333,8 +333,8 @@ log_success "Checksums MD5 générés"
 # Crée l'ISO selon la version choisie
 cd "$local/FichierIso"
 case "${choix}" in
-	"Master")
-		output_iso="$local/solibuntu-24.04-master.iso"
+	"Main")
+		output_iso="$local/solibuntu-24.04-main.iso"
 	;;
 	"Dev")
 		output_iso="$local/solibuntu-24.04-dev.iso"
