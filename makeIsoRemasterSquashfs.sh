@@ -51,12 +51,61 @@ if [ -n "$missing_packages" ]; then
 	exit 1
 fi
 
-# Vérification de l'ISO
+# Vérification et téléchargement de l'ISO si nécessaire
 if [ ! -f "$iso" ]; then
-	echo "Erreur : ISO Xubuntu 24.04 introuvable : $iso"
-	echo "Téléchargez-la avec :"
-	echo "wget https://cdimage.ubuntu.com/xubuntu/releases/24.04/release/xubuntu-24.04-desktop-amd64.iso"
-	exit 1
+	echo "=========================================="
+	echo "ISO Xubuntu 24.04 introuvable."
+	echo "Téléchargement automatique en cours..."
+	echo "=========================================="
+	
+	iso_url="https://cdimage.ubuntu.com/xubuntu/releases/24.04/release/xubuntu-24.04-desktop-amd64.iso"
+	
+	# Vérifier que wget est installé
+	if ! command -v wget &> /dev/null; then
+		echo "Erreur : wget n'est pas installé."
+		echo "Installez-le avec : sudo apt install wget"
+		exit 1
+	fi
+	
+	# Télécharger l'ISO avec barre de progression
+	echo "Téléchargement depuis : $iso_url"
+	echo "Taille attendue : ~3.5 Go"
+	echo "Cela peut prendre plusieurs minutes selon votre connexion..."
+	echo ""
+	
+	wget --progress=bar:force:noscroll -c "$iso_url" -O "$iso"
+	
+	# Vérifier que le téléchargement a réussi
+	if [ $? -ne 0 ] || [ ! -f "$iso" ]; then
+		echo "Erreur : Échec du téléchargement de l'ISO."
+		echo "Veuillez télécharger manuellement depuis :"
+		echo "$iso_url"
+		rm -f "$iso" 2>/dev/null
+		exit 1
+	fi
+	
+	echo ""
+	echo "✓ Téléchargement terminé avec succès."
+	echo ""
+	
+	# Vérifier la taille du fichier (l'ISO doit faire au moins 2 Go)
+	file_size=$(stat -c%s "$iso" 2>/dev/null || echo "0")
+	min_size=$((2 * 1024 * 1024 * 1024))  # 2 Go en octets
+	
+	if [ "$file_size" -lt "$min_size" ]; then
+		echo "Avertissement : La taille du fichier téléchargé semble incorrecte."
+		echo "Taille téléchargée : $(du -h "$iso" | cut -f1)"
+		echo "Taille minimale attendue : 2 Go"
+		read -p "Voulez-vous continuer quand même ? (o/N) " -n 1 -r
+		echo
+		if [[ ! $REPLY =~ ^[OoYy]$ ]]; then
+			rm -f "$iso"
+			exit 1
+		fi
+	fi
+else
+	echo "✓ ISO Xubuntu 24.04 trouvée : $iso"
+	echo "  Taille : $(du -h "$iso" | cut -f1)"
 fi
 
 echo "Tous les prérequis sont installés."
