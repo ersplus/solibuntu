@@ -85,7 +85,7 @@ preInstall="$local/preInstall.sh"
 
 # Vérification des prérequis
 log_info "Vérification des prérequis..."
-required_packages="squashfs-tools schroot xorriso wget"
+required_packages="squashfs-tools schroot xorriso wget imagemagick"
 missing_packages=""
 
 for pkg in $required_packages; do
@@ -95,12 +95,20 @@ for pkg in $required_packages; do
 done
 
 if [ -n "$missing_packages" ]; then
-	log_error "Les paquets suivants doivent être installés :$missing_packages"
-	log_error "Exécutez : sudo apt install$missing_packages"
-	exit 1
+	log_warning "Les paquets suivants vont être installés :$missing_packages"
+	log_info "Installation en cours..."
+	
+	# Installation automatique avec apt-get
+	if sudo apt-get update && sudo apt-get install -y $missing_packages; then
+		log_success "Installation des prérequis réussie"
+	else
+		log_error "Erreur lors de l'installation des prérequis"
+		log_error "Exécutez manuellement : sudo apt-get install$missing_packages"
+		exit 1
+	fi
+else
+	log_success "Tous les prérequis sont installés."
 fi
-
-log_success "Tous les prérequis sont installés."
 
 log_info ""
 log_info "Vérification et téléchargement de l'ISO si nécessaire..."
