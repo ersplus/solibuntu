@@ -1,0 +1,54 @@
+# Fichiers ISO (trop volumineux pour GitHub)
+*.iso
+
+# Dossiers temporaires de création ISO
+FichierIso/
+squashfs/
+
+# Fichiers de sauvegarde
+*.bak
+*.backup
+*~
+
+# Fichiers temporaires
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# Archives temporaires
+*.tar.gz.tmp
+*.zip.tmp
+
+# Fichiers macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Fichiers Windows
+Thumbs.db
+Desktop.ini
+
+# Fichiers Linux
+*~
+.directory
+
+# Fichiers d'éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Fichiers Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Fichiers de build
+build/
+dist/
+*.egg-info/
