@@ -444,6 +444,16 @@ log_success "ISO hybride configurée"
 log_info "Nettoyage final des dossiers de travail..."
 
 cd "$local"
+
+# Démontage de sécurité avant suppression
+log_info "Vérification des montages résiduels..."
+umount -lf "$local/squashfs/sys" 2>/dev/null || true
+umount -lf "$local/squashfs/proc" 2>/dev/null || true
+umount -lf "$local/squashfs/dev/pts" 2>/dev/null || true
+umount -lf "$local/squashfs/dev" 2>/dev/null || true
+umount -lf /mnt 2>/dev/null || true
+
+# Suppression des dossiers
 rm -rf FichierIso/ 
 rm -rf squashfs/
 
