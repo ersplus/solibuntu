@@ -63,7 +63,7 @@ choix=$(zenity --list --radiolist --column "Choix" --column "Version" FALSE "Mai
 local=$(pwd)
 
 # Récupère l'iso, le fichier de preseed et les fichiers de configuration
-iso="$local/xubuntu-24.04-desktop-amd64.iso"
+iso="$local/xubuntu-24.04.3-desktop-amd64.iso"
 iso_sha256="$local/SHA256SUMS"
 preseed="$local/preseed.cfg"
 txt="$local/txt.cfg"
@@ -117,7 +117,7 @@ if [ ! -f "$iso" ]; then
 	log_warning "ISO Xubuntu 24.04 introuvable."
 	log_info "Téléchargement automatique en cours..."
 	
-	iso_url="https://cdimage.ubuntu.com/xubuntu/releases/24.04/release/xubuntu-24.04-desktop-amd64.iso"
+	iso_url="https://cdimage.ubuntu.com/xubuntu/releases/24.04/release/xubuntu-24.04.3-desktop-amd64.iso"
 	sha256_url="https://cdimage.ubuntu.com/xubuntu/releases/24.04/release/SHA256SUMS"
 	
 	log_info "Téléchargement depuis : $iso_url"
