@@ -294,16 +294,22 @@ cp /etc/hosts "$local/squashfs/etc/hosts"
 log_info "Lancement des commandes en chroot..."
 cd "$local"
 
-# Exécute les commandes de personnalisation
-bash < crt.sh
-
-# Applique le thème Plymouth 'pix' par défaut et régénère l'initramfs
-log_info "Activation du thème Plymouth 'pix' dans le chroot..."
-if chroot "$local/squashfs" plymouth-set-default-theme pix 2>/dev/null; then
-	log_success "Thème Plymouth défini"
-	chroot "$local/squashfs" update-initramfs -u || log_warning "Échec update-initramfs, continuant"
+# Vérifier si le squashfs contient un système complet avec bash
+if [ -x "$local/squashfs/bin/bash" ] || [ -x "$local/squashfs/usr/bin/bash" ]; then
+	# Exécute les commandes de personnalisation
+	bash < crt.sh
+	
+	# Applique le thème Plymouth 'pix' par défaut et régénère l'initramfs
+	log_info "Activation du thème Plymouth 'pix' dans le chroot..."
+	if chroot "$local/squashfs" plymouth-set-default-theme pix 2>/dev/null; then
+		log_success "Thème Plymouth défini"
+		chroot "$local/squashfs" update-initramfs -u || log_warning "Échec update-initramfs, continuant"
+	else
+		log_warning "plymouth-set-default-theme non disponible; le thème pourrait ne pas être activé"
+	fi
 else
-	log_warning "plymouth-set-default-theme non disponible; le thème pourrait ne pas être activé"
+	log_warning "Squashfs minimal détecté (pas de bash), skip des commandes chroot"
+	log_info "Le thème Plymouth sera intégré directement dans l'ISO sans chroot"
 fi
 
 log_info "Démontage des systèmes de fichiers..."
@@ -325,10 +331,15 @@ if [ ! -f "$MANIFEST_FILE" ] && [ -f "$local/FichierIso/casper/minimal.standard.
 	MANIFEST_FILE="$local/FichierIso/casper/minimal.standard.live.manifest"
 fi
 
-chmod a+w "$MANIFEST_FILE"
-chroot "$local/squashfs" dpkg-query -W --showformat='${Package} ${Version}\n' > "$MANIFEST_FILE"
-chmod go-w "$MANIFEST_FILE"
-log_success "Manifest mis à jour."
+# Vérifier si le squashfs a dpkg-query disponible
+if [ -x "$local/squashfs/usr/bin/dpkg-query" ] || [ -x "$local/squashfs/bin/dpkg-query" ]; then
+	chmod a+w "$MANIFEST_FILE"
+	chroot "$local/squashfs" dpkg-query -W --showformat='${Package} ${Version}\n' > "$MANIFEST_FILE"
+	chmod go-w "$MANIFEST_FILE"
+	log_success "Manifest mis à jour."
+else
+	log_warning "dpkg-query non disponible dans le squashfs, conservation du manifest original"
+fi
 
 #-----------------------------------------------------------
 # Reconstruction du filesystem
