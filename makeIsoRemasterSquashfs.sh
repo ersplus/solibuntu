@@ -83,6 +83,20 @@ esac
 
 preInstall="$local/preInstall.sh"
 
+# Vérification et chargement du module loop
+log_info "Vérification du module loop..."
+if ! lsmod | grep -q "^loop"; then
+	log_warning "Module loop non chargé, chargement en cours..."
+	if sudo modprobe loop; then
+		log_success "Module loop chargé"
+	else
+		log_error "Impossible de charger le module loop"
+		exit 1
+	fi
+else
+	log_success "Module loop disponible"
+fi
+
 # Vérification des prérequis
 log_info "Vérification des prérequis..."
 required_packages="squashfs-tools schroot xorriso wget imagemagick"
