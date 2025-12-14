@@ -196,8 +196,21 @@ log_success "ISO extraite."
 log_info "Extraction du filesystem..."
 mkdir -p "$local/squashfs"
 
+# Déterminer le fichier squashfs à utiliser (structure Xubuntu 24.04.3)
+SQUASHFS_FILE=""
+if [ -f "$local/FichierIso/casper/filesystem.squashfs" ]; then
+	SQUASHFS_FILE="$local/FichierIso/casper/filesystem.squashfs"
+	log_info "Utilisation de filesystem.squashfs"
+elif [ -f "$local/FichierIso/casper/minimal.standard.live.squashfs" ]; then
+	SQUASHFS_FILE="$local/FichierIso/casper/minimal.standard.live.squashfs"
+	log_info "Utilisation de minimal.standard.live.squashfs (Xubuntu 24.04.3+)"
+else
+	log_error "Aucun fichier squashfs trouvé dans casper/"
+	exit 1
+fi
+
 # Monte le filesystem
-mount -t squashfs -o loop "$local/FichierIso/casper/filesystem.squashfs" /mnt
+mount -t squashfs -o loop "$SQUASHFS_FILE" /mnt
 # Récupère les fichiers
 rsync -av /mnt/ "$local/squashfs/" 2>&1 | tail -20
 # Démonte le squashfs
@@ -300,9 +313,15 @@ rm -f "$local/squashfs/etc/hosts"
 log_success "Chroot terminé."
 
 log_info "Mise à jour du manifest..."
-chmod a+w "$local/FichierIso/casper/filesystem.manifest"
-chroot "$local/squashfs" dpkg-query -W --showformat='${Package} ${Version}\n' > "$local/FichierIso/casper/filesystem.manifest"
-chmod go-w "$local/FichierIso/casper/filesystem.manifest"
+# Déterminer le fichier manifest à mettre à jour
+MANIFEST_FILE="$local/FichierIso/casper/filesystem.manifest"
+if [ ! -f "$MANIFEST_FILE" ] && [ -f "$local/FichierIso/casper/minimal.standard.live.manifest" ]; then
+	MANIFEST_FILE="$local/FichierIso/casper/minimal.standard.live.manifest"
+fi
+
+chmod a+w "$MANIFEST_FILE"
+chroot "$local/squashfs" dpkg-query -W --showformat='${Package} ${Version}\n' > "$MANIFEST_FILE"
+chmod go-w "$MANIFEST_FILE"
 log_success "Manifest mis à jour."
 
 #-----------------------------------------------------------
@@ -310,18 +329,31 @@ log_success "Manifest mis à jour."
 #-----------------------------------------------------------
 log_info "Reconstruction du filesystem..."
 
+# Déterminer le fichier squashfs de sortie (selon version détectée)
+OUTPUT_SQUASHFS=""
+OUTPUT_SIZE=""
+if [ -f "$local/FichierIso/casper/filesystem.squashfs" ] || [ ! -f "$local/FichierIso/casper/minimal.standard.live.squashfs" ]; then
+	OUTPUT_SQUASHFS="$local/FichierIso/casper/filesystem.squashfs"
+	OUTPUT_SIZE="$local/FichierIso/casper/filesystem.size"
+	log_info "Mode: filesystem.squashfs (classique)"
+else
+	OUTPUT_SQUASHFS="$local/FichierIso/casper/minimal.standard.live.squashfs"
+	OUTPUT_SIZE="$local/FichierIso/casper/minimal.standard.live.size"
+	log_info "Mode: minimal.standard.live.squashfs (Xubuntu 24.04.3+)"
+fi
+
 # Efface l'ancien filesystem
-rm -f "$local/FichierIso/casper/filesystem.squashfs"
+rm -f "$OUTPUT_SQUASHFS"
 
 # Recrée un nouveau filesystem avec compression optimale
 cd "$local/squashfs"
 log_info "Compression avec mksquashfs (xz)..."
-mksquashfs . ../FichierIso/casper/filesystem.squashfs -comp xz -b 1M -progress
+mksquashfs . "$OUTPUT_SQUASHFS" -comp xz -b 1M -progress
 cd "$local"
 
 # Mise à jour de la taille du filesystem
 filesystem_size=$(du -sx --block-size=1 "$local/squashfs" | cut -f1)
-printf "%s" "$filesystem_size" > "$local/FichierIso/casper/filesystem.size"
+printf "%s" "$filesystem_size" > "$OUTPUT_SIZE"
 log_success "Filesystem reconstruit ($(numfmt --to=iec-i --suffix=B "$filesystem_size" 2>/dev/null || echo "$filesystem_size bytes"))."
 
 #-----------------------------------------------------------
