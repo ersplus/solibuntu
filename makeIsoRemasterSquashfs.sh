@@ -219,10 +219,10 @@ SPLASH_DST="$PLYMOUTH_THEME_DIR/splash.png"
 
 if [ -f "$SPLASH_SRC_PNG" ]; then
 	log_info "Utilisation de share/splash.png comme source"
-	convert "$SPLASH_SRC_PNG" -resize 1920x1080\> -strip "$SPLASH_DST"
+	convert "$SPLASH_SRC_PNG" -background black -alpha remove -alpha off -resize 1920x1080\> -strip "$SPLASH_DST"
 elif [ -f "$SPLASH_SRC_XCF" ]; then
 	log_info "Conversion de share/splash.xcf en PNG"
-	convert "$SPLASH_SRC_XCF" -flatten -resize 1920x1080\> -strip "$SPLASH_DST"
+	convert "$SPLASH_SRC_XCF" -background black -flatten -resize 1920x1080\> -strip "$SPLASH_DST"
 else
 	log_warning "Aucun splash.png ou splash.xcf trouvé dans share/. Utilisation du fichier présent si disponible."
 	# Si aucun fichier source, laisser tel quel; le thème attend splash.png
