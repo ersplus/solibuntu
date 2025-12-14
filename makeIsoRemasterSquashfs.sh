@@ -419,7 +419,7 @@ xorriso -as mkisofs \
 	-full-iso9660-filenames \
 	-volid "Solibuntu 24.04" \
 	-output "$output_iso" \
-	-eltorito-boot boot/grub/bios.img \
+	-eltorito-boot boot/grub/i386-pc/eltorito.img \
 		-no-emul-boot \
 		-boot-load-size 4 \
 		-boot-info-table \
@@ -427,9 +427,9 @@ xorriso -as mkisofs \
 		--grub2-boot-info \
 		--grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
 	-eltorito-alt-boot \
-		-e EFI/BOOT/mmx64.efi \
+		-e EFI/boot/mmx64.efi \
 		-no-emul-boot \
-	-append_partition 2 0xef FichierIso/boot/grub/efi.img \
+	-append_partition 2 0xef EFI/boot/mmx64.efi \
 	-m "isolinux" \
 	. 2>&1 | tail -5
 
