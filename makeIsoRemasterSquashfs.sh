@@ -364,8 +364,9 @@ rm -f "$OUTPUT_SQUASHFS"
 
 # Recrée un nouveau filesystem avec compression optimale
 cd "$local/squashfs"
-log_info "Compression avec mksquashfs (xz)..."
-mksquashfs . "$OUTPUT_SQUASHFS" -comp xz -b 1M -progress
+log_info "Compression avec mksquashfs (xz, bcj x86)..."
+# bcj x86 améliore la compression des binaires/ELF sans coût notable
+mksquashfs . "$OUTPUT_SQUASHFS" -comp xz -Xbcj x86 -b 1M -Xdict-size 100% -progress
 cd "$local"
 
 # Mise à jour de la taille du filesystem
@@ -389,6 +390,35 @@ if [ -f "$preInstall" ]; then
 	cp "$preInstall" "$local/FichierIso/preInstall.sh"
 	chmod +x "$local/FichierIso/preInstall.sh"
 	log_success "Script preInstall configuré"
+fi
+
+# Intégration des scripts Solibuntu dans l'ISO
+if [ -d "$local/scripts" ]; then
+	log_info "Copie des scripts Solibuntu dans l'ISO..."
+	mkdir -p "$local/FichierIso/Solibuntu/scripts"
+	cp -a "$local/scripts"/*.sh "$local/FichierIso/Solibuntu/scripts/" 2>/dev/null || true
+	# Sous-dossiers utiles (lightdm.conf.d, desktop files, etc.)
+	if [ -d "$local/scripts/lightdm" ]; then
+		mkdir -p "$local/FichierIso/Solibuntu/scripts/lightdm"
+		cp -a "$local/scripts/lightdm"/* "$local/FichierIso/Solibuntu/scripts/lightdm/"
+	fi
+	if [ -d "$local/scripts/lightdm.conf.d" ]; then
+		mkdir -p "$local/FichierIso/Solibuntu/scripts/lightdm.conf.d"
+		cp -a "$local/scripts/lightdm.conf.d"/* "$local/FichierIso/Solibuntu/scripts/lightdm.conf.d/"
+	fi
+	if [ -f "$local/scripts/sessionStart.desktop" ]; then
+		mkdir -p "$local/FichierIso/Solibuntu/scripts"
+		cp -a "$local/scripts/sessionStart.desktop" "$local/FichierIso/Solibuntu/scripts/"
+	fi
+	if [ -f "$local/scripts/sessionStart.sh" ]; then
+		cp -a "$local/scripts/sessionStart.sh" "$local/FichierIso/Solibuntu/scripts/"
+		chmod +x "$local/FichierIso/Solibuntu/scripts/sessionStart.sh"
+	fi
+	# Droits d'exécution sur tous les .sh
+	find "$local/FichierIso/Solibuntu/scripts" -type f -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
+	log_success "Scripts Solibuntu intégrés dans l'ISO"
+else
+	log_warning "Dossier scripts introuvable, aucune intégration effectuée."
 fi
 
 	# Forcer le chargement du preseed et l'installation automatique (Ubiquity)

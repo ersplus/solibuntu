@@ -63,6 +63,11 @@ squashfs-tools schroot xorriso syslinux-utils rsync
    - Nettoyage automatique des dossiers temporaires
    - Support UEFI complet
    - Meilleure gestion des erreurs
+   - Intégration des scripts Solibuntu dans l'ISO (`Solibuntu/scripts` + `Solibuntu/share`)
+   - Injection automatique des paramètres kernel preseed (`file=/cdrom/preseed/xubuntu.seed automatic-ubiquity`)
+   - Compression squashfs optimisée : xz + filtre `-Xbcj x86` (dictionnaire 100%)
+   - Prise en charge des ISO Xubuntu 24.04.3 avec squashfs modulaire (`minimal.standard.live.squashfs`)
+   - Variante hybride BIOS/UEFI possible via xorriso (replay + `grub2_mbr=/usr/lib/grub/i386-pc/boot_hybrid.img`)
 
 2. **Script crt.sh :**
    - Utilisation de heredoc pour le chroot
@@ -137,3 +142,11 @@ sudo chown -R $USER:$USER /opt/borne
 
 Basé sur le travail original de ISO-solibuntu pour Xubuntu 18.04
 Adapté pour Xubuntu 24.04 LTS - $(date +%Y)
+
+### Journal récent (14/12/2025)
+
+- Intégration complète des scripts Solibuntu dans l'ISO (dossier `Solibuntu/` copié dans squashfs)
+- Activation automatique de l'installation Ubiquity via preseed (kernel params ajoutés dans GRUB/txt.cfg si présent)
+- Optimisation de la compression squashfs (xz + bcj x86) pour gagner quelques Mo
+- Support des ISO Xubuntu 24.04.3 (détection `minimal.standard.live.squashfs`)
+- Option de régénération hybride BIOS/UEFI avec xorriso (replay + MBR grub2)

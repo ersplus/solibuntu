@@ -16,6 +16,8 @@ Version basée sur **Xubuntu 24.04 LTS (Noble Numbat)**
 - ✅ **Affichage du fond d'écran adaptatif** - Redimensionnement automatique selon la résolution
 - ✅ **Activation automatique de NumLock** - NumLock activé au démarrage
 - ✅ **Installation automatique des prérequis** - Sans confirmation utilisateur
+- ✅ **Installation automatisée (preseed)** - Paramètres kernel auto-ubiquity + xubuntu.seed injectés
+- ✅ **Scripts Solibuntu intégrés dans l'ISO** - Copie de `/opt/borne/scripts` et `share` dans l'image
 - ✅ **Gestion des clés USB sécurisée** - Avec identifiants uniques
 - ✅ **Filtrage parental** - Avec CTParental
 - ✅ **Code amélioré et documenté** - Lisibilité et maintenabilité
@@ -54,6 +56,9 @@ sudo bash scripts/install.sh
 - NumLock activation automatique
 - ImageMagick redimensionnement images
 - Installation prérequis sans confirmation
+- Installation automatisée via preseed (automatic-ubiquity)
+- Scripts Solibuntu embarqués dans l'ISO (dossier `Solibuntu/`)
+- Compression squashfs optimisée (xz + bcj x86)
 - Code amélioré et documenté
 - GitHub releases configurées
 
@@ -194,14 +199,24 @@ sudo ./makeIsoRemasterSquashfs.sh
 ```
 
 Le script proposera :
-- **Master** : Version stable (release v0.5.0)
+- **Main** : Version stable (release GitHub)
 - **Dev** : Version développement
 
 ### Résultat
 
 ```bash
-solibuntu-24.04-master.iso    # ~2.5 GB
-solibuntu-24.04-dev.iso       # ~2.5 GB
+solibuntu-24.04-main.iso    # ~4.1 GB
+solibuntu-24.04-dev.iso     # ~4.1 GB
+```
+
+Une variante hybride BIOS/UEFI peut être régénérée avec xorriso (replay) si besoin de compatibilité BIOS accrue :
+
+```bash
+sudo xorriso -indev solibuntu-24.04-main.iso -outdev solibuntu-24.04-main-hybrid.iso \
+  -boot_image any replay \
+  -boot_image grub grub2_mbr=/usr/lib/grub/i386-pc/boot_hybrid.img \
+  -boot_image any partition_table=on \
+  -boot_image any mbr_force_bootable=on
 ```
 
 ## 💾 Créer une Clé USB Bootable
@@ -243,8 +258,10 @@ sudo dd if=solibuntu-24.04-master.iso of=/dev/sdX bs=4M status=progress && sync
 **Générateur d'ISO bootable**
 - Télécharge Xubuntu 24.04 auto
 - Extrait et personnalise
-- Intègre Solibuntu
-- Génère ISO hybrid (USB + DVD)
+- Intègre Solibuntu (scripts + share)
+- Injecte preseed et options kernel automatic-ubiquity
+- Compression xz avec filtre bcj x86 (squashfs optimisé)
+- Génère ISO hybrid UEFI; variante BIOS/UEFI via xorriso replay
 
 ### `filtrage_install.sh`
 **Installation filtrage parental**
