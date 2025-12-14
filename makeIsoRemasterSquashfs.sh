@@ -274,6 +274,12 @@ fi
 #-----------------------------------------------------------
 log_info "Configuration du chroot..."
 
+log_info "Création des points de montage..."
+mkdir -p "$local/squashfs/proc"
+mkdir -p "$local/squashfs/sys"
+mkdir -p "$local/squashfs/dev"
+mkdir -p "$local/squashfs/dev/pts"
+
 log_info "Montage des systèmes de fichiers..."
 mount --bind /proc "$local/squashfs/proc" 
 mount --bind /sys "$local/squashfs/sys"
