@@ -13,13 +13,13 @@ repinstallation="/opt/borne"
 #-------------------------------------------------------
 
 cd /opt/
-# Check branche dev
-wget https://github.com/ersplus/solibuntu/archive/Dev.zip -O /opt/Dev.zip
+# Check branche dev (depuis Solibuntu-24.04)
+wget https://github.com/ersplus/Solibuntu-24.04/archive/main.zip -O /opt/Dev.zip
 
 if [ $? == 0 ] ; then
 	rm -rf /opt/borne
 	unzip Dev.zip
-	mv /opt/solibuntu-Dev $repinstallation
+	mv /opt/Solibuntu-24.04-main $repinstallation
 	chmod +x $repinstallation/scripts/*.sh
 	rm Dev.zip
 

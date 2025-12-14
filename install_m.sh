@@ -14,9 +14,9 @@ repinstallation="/opt/borne"
 
 cd /opt/
 
-# Télécharger la dernière release stable depuis GitHub
+# Télécharger la dernière release stable depuis GitHub (Solibuntu-24.04)
 echo "Téléchargement de la dernière version de Solibuntu Xubuntu 24.04..."
-wget https://github.com/ersplus/solibuntu/releases/latest/download/solibuntu-xubuntu-24.04.zip -O /opt/solibuntu-latest.zip
+wget https://github.com/ersplus/Solibuntu-24.04/releases/latest/download/solibuntu-xubuntu-24.04.zip -O /opt/solibuntu-latest.zip
 
 if [ $? -eq 0 ]; then
 	echo "Installation en cours..."
