@@ -391,6 +391,35 @@ if [ -f "$preInstall" ]; then
 	log_success "Script preInstall configuré"
 fi
 
+	# Forcer le chargement du preseed et l'installation automatique (Ubiquity)
+	log_info "Activation des options d'installation automatique (preseed)..."
+
+	# Ajoute les paramètres au menu GRUB si présent (BIOS/UEFI)
+	GRUB_CFG_BIOS="$local/FichierIso/boot/grub/grub.cfg"
+	GRUB_CFG_EFI="$local/FichierIso/boot/grub/x86_64-efi/grub.cfg"
+
+	KERNEL_PARAMS="file=/cdrom/preseed/xubuntu.seed automatic-ubiquity ubiquity/reboot=true quiet splash ---"
+
+	for cfg in "$GRUB_CFG_BIOS" "$GRUB_CFG_EFI"; do
+		if [ -f "$cfg" ]; then
+			log_info "Patch de $cfg pour ajouter les paramètres preseed"
+			# Ajoute les options aux lignes linux existantes sans dupliquer si déjà présent
+			if ! grep -q "preseed" "$cfg"; then
+				sed -i "s@\(^[[:space:]]*linux.*\)@\1 $KERNEL_PARAMS@" "$cfg"
+			fi
+			log_success "Paramètres kernel ajoutés dans $(basename "$cfg")"
+		fi
+	done
+
+	TXT_CFG="$local/FichierIso/isolinux/txt.cfg"
+	if [ -f "$TXT_CFG" ]; then
+		log_info "Patch de isolinux/txt.cfg pour ajouter les paramètres preseed"
+		if ! grep -q "preseed" "$TXT_CFG"; then
+			sed -i "s@\(^[[:space:]]*append .*$\)@\1 $KERNEL_PARAMS@" "$TXT_CFG"
+		fi
+		log_success "Paramètres kernel ajoutés dans txt.cfg"
+	fi
+
 #-----------------------------------------------------------
 # Génération de l'ISO finale
 #-----------------------------------------------------------
