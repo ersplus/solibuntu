@@ -200,6 +200,41 @@ cp -v "$postInstall" "$local/squashfs/Solibuntu/install.sh"
 log_success "Fichiers Solibuntu copiés."
 
 #-----------------------------------------------------------
+# Thème Plymouth personnalisé (splash au boot)
+#-----------------------------------------------------------
+log_info "Installation du thème Plymouth 'pix' avec splash personnalisé..."
+
+# Dossier thème cible
+PLYMOUTH_THEME_DIR="$local/squashfs/usr/share/plymouth/themes/pix"
+mkdir -p "$PLYMOUTH_THEME_DIR"
+
+# Copier les fichiers de thème
+cp -v "$local/share/pix/pix.plymouth" "$PLYMOUTH_THEME_DIR/pix.plymouth"
+cp -v "$local/share/pix/pix.script" "$PLYMOUTH_THEME_DIR/pix.script"
+
+# Générer/adapter l'image splash.png
+SPLASH_SRC_PNG="$local/share/splash.png"
+SPLASH_SRC_XCF="$local/share/splash.xcf"
+SPLASH_DST="$PLYMOUTH_THEME_DIR/splash.png"
+
+if [ -f "$SPLASH_SRC_PNG" ]; then
+	log_info "Utilisation de share/splash.png comme source"
+	convert "$SPLASH_SRC_PNG" -resize 1920x1080\> -strip "$SPLASH_DST"
+elif [ -f "$SPLASH_SRC_XCF" ]; then
+	log_info "Conversion de share/splash.xcf en PNG"
+	convert "$SPLASH_SRC_XCF" -flatten -resize 1920x1080\> -strip "$SPLASH_DST"
+else
+	log_warning "Aucun splash.png ou splash.xcf trouvé dans share/. Utilisation du fichier présent si disponible."
+	# Si aucun fichier source, laisser tel quel; le thème attend splash.png
+fi
+
+if [ -f "$SPLASH_DST" ]; then
+	log_success "splash.png installé dans le thème Plymouth"
+else
+	log_warning "splash.png manquant dans le thème Plymouth; le thème pourrait ne pas s'afficher."
+fi
+
+#-----------------------------------------------------------
 # Configuration chroot pour personnalisation
 #-----------------------------------------------------------
 log_info "Configuration du chroot..."
@@ -220,6 +255,15 @@ cd "$local"
 
 # Exécute les commandes de personnalisation
 bash < crt.sh
+
+# Applique le thème Plymouth 'pix' par défaut et régénère l'initramfs
+log_info "Activation du thème Plymouth 'pix' dans le chroot..."
+if chroot "$local/squashfs" plymouth-set-default-theme pix 2>/dev/null; then
+	log_success "Thème Plymouth défini"
+	chroot "$local/squashfs" update-initramfs -u || log_warning "Échec update-initramfs, continuant"
+else
+	log_warning "plymouth-set-default-theme non disponible; le thème pourrait ne pas être activé"
+fi
 
 log_info "Démontage des systèmes de fichiers..."
 umount -lf "$local/squashfs/sys"
