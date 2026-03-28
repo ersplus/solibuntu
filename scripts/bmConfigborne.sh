@@ -29,7 +29,7 @@ hauteurEcran=$(xwininfo -root | awk '$1=="Height:" {print $2}')
 # ======================================================================
 
 # Choix gestionnaire
-if [ $1 == "gestionnaire" ] ; then
+if [ "$1" = "gestionnaire" ] ; then
 	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
 			--image=info --image-on-top \
@@ -42,7 +42,7 @@ if [ $1 == "gestionnaire" ] ; then
 			false "Créer une clé USB")
 
 # Choix administrateur
-elif [ $1 == "administrateur" ] ; then
+elif [ "$1" = "administrateur" ] ; then
 	reponse=$(yad --width=$largeurEcran --height=$hauteurEcran \
 			--title="Configuration" --text="Ecran de configuration de l'ordinateur Solibuntu. Veuillez choisir une option ci-dessous :" \
 			--image=info --image-on-top \
@@ -72,20 +72,19 @@ fi
 	"Mettre à jour et redémarrer|")
 	(
 	echo "10" ; sleep 1
-	echo "# Vérification des mises à jour" ; apt update
+	echo "# Vérification des mises à jour" ; sudo apt-get update
 	echo "20" ; sleep 1
-	echo "# Application des mises à jour" ; apt full-upgrade -y
+	echo "# Application des mises à jour" ; sudo apt-get full-upgrade -y
 	echo "40" ; sleep 1
-	echo "# Mise à jour" ; apt install -f
+	echo "# Mise à jour" ; sudo apt-get install -f
 	echo "60" ; sleep 1
 	echo "# Maj Solibuntu"
 		echo "90" ;
-		# Lance le script d'installation
 		cd "$repinstallation/scripts"
-		./install.sh maj
-	echo "# Mise à jour" ; apt autoremove --purge -y
+		sudo "$repinstallation/scripts/install.sh" maj
+	echo "# Mise à jour" ; sudo apt-get autoremove --purge -y
 	echo "95" ; sleep 1
-	echo "# Redémarrage du système" ; reboot
+	echo "# Redémarrage du système" ; sudo reboot
 	echo "99" ; sleep 1
 	) |
 	zenity --progress \
@@ -98,17 +97,16 @@ fi
 	fi
 	;;
 	"Configurer l'ordinateur|")
-	cp -i $repinstallation/scripts/lightdm.conf.d/50-logout-restoreinvite.conf /etc/lightdm/lightdm.conf.d/
-	rm /etc/lightdm/lightdm.conf.d/50-auto-guest.conf
-	rm /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
-	pkill bmGreeter.sh
-	service lightdm restart
+	sudo cp -i "$repinstallation/scripts/lightdm.conf.d/50-logout-restoreinvite.conf" /etc/lightdm/lightdm.conf.d/
+	sudo rm -f /etc/lightdm/lightdm.conf.d/50-auto-guest.conf
+	sudo rm -f /etc/lightdm/lightdm.conf.d/50-guest-wrapper.conf
+	pkill bmGreeter.sh 2>/dev/null || true
+	sudo systemctl restart lightdm || sudo service lightdm restart
 	;;
 
 	"Installer le filtrage|")
-		# Lance le script d'installation du filtrage
 		cd /opt/borne/scripts/
-        sudo ./filtrage_install.sh
+        sudo -E ./filtrage_install.sh
         if [ $? == 0 ] ; then
             zenity --info --width=300 --text "Le filtrage a bien été installé \n \
             Votre ordinateur va redémarrer"

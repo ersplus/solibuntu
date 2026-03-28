@@ -46,7 +46,7 @@ Désirez-vous installer cette solution ?' \
 --ok-label "Oui" --cancel-label="Non"
             if [ $? == 0 ] ; then
                 cd /opt/borne/scripts/
-                sudo ./filtrage_install.sh
+                sudo -E ./filtrage_install.sh
                 if [ $? == 0 ] ; then
                     zenity --info --width=300 --text "Le filtrage a bien été installé
 L’ordinateur va redémarrer pour finaliser l’installation"

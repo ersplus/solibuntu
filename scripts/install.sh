@@ -135,8 +135,11 @@ if [ $? == 0 ] ; then
 	apt-get install -y firefox-locale-fr || true
 
 
-	# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
+	# Thunar / Xfce : le profil est surtout défini dans share/xfce4 (skel). Ancien réglage MATE Caja sans effet ici.
 	if [ "$1" != "iso" ] ; then
+		if command -v xfconf-query >/dev/null 2>&1 && [ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+			xfconf-query -c thunar -p /misc-open-terminal -n -t bool -s false 2>/dev/null || true
+		fi
 		dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']" 2>/dev/null || true
 		apt-get install printer-driver-cups-pdf
 	fi
@@ -172,9 +175,17 @@ if [ $? == 0 ] ; then
 	# Navigateur par défaut Firefox
 	# Proxy, Gestion de l'historique, page de démarrage etc...
 
-	# voir Xavier pour docs
-	xdg-settings set default-web-browser firefox-browser.desktop
-	cp -r $repinstallation/share/firefox/syspref.js /etc/firefox/syspref.js 
+	# Firefox deb ou Snap : essayer plusieurs .desktop (Xubuntu 24.04+ / 25.x)
+	_firefox_set=0
+	for _desk in firefox.desktop firefox_firefox.desktop mozilla-firefox.desktop; do
+		if xdg-settings set default-web-browser "$_desk" 2>/dev/null; then
+			_firefox_set=1
+			break
+		fi
+	done
+	[ "${_firefox_set:-0}" -eq 1 ] || xdg-settings set default-web-browser firefox-browser.desktop 2>/dev/null || true
+	mkdir -p /etc/firefox
+	cp -r $repinstallation/share/firefox/syspref.js /etc/firefox/syspref.js
 	
 	#-------------------------------------------------------
 	#  Configuration fichier sudoers
