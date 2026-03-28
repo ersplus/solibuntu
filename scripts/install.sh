@@ -4,7 +4,7 @@
 ### Solibuntu Master                 ###
 ### Installation Solibuntu Master    ###
 ### 28/07/2018                       ###
-### master 		             ###
+### Paquets révisés pour Xubuntu 24.04+ / 25.x (Noble, Plucky) ###
 
 repinstallation="/opt/borne"
 
@@ -91,26 +91,48 @@ if [ $? == 0 ] ; then
 		apt-get full-upgrade -y && apt install -f && apt-get clean
 	fi
 
-	# Suppression des applications
-	apt remove synapse seahorse thunderbird transmission-* pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin -y
+	# Suppression des applications (paquets absents selon la version : ignorés)
+	apt-get remove -y --ignore-missing \
+		synapse seahorse \
+		transmission-gtk transmission-common transmission-cli \
+		pidgin xfce4-notes xfce4-mailwatch-plugin xfce4-weather-plugin
+	# Thunderbird est souvent installé en snap sur Xubuntu 25.x
+	if command -v snap >/dev/null 2>&1; then
+		snap remove thunderbird 2>/dev/null || true
+	fi
+	apt-get remove -y --ignore-missing thunderbird || true
 
 	# Les jeux
-	apt remove sgt-launcher sgt-puzzles gnome-sudoku gnome-mines -y
+	apt-get remove -y --ignore-missing sgt-launcher sgt-puzzles gnome-sudoku gnome-mines || true
 
-	# Installation des applications complémentaires
-	apt-get install -y exfat-utils feh yad imagemagick xsane
+	# Outils borne : exFAT (exfatprogs sur les Ubuntu récents, sinon exfat-utils)
+	apt-get install -y exfatprogs feh yad imagemagick xsane \
+		|| apt-get install -y exfat-utils feh yad imagemagick xsane
 
-	# Installation des polices complémentaires
-	apt-get install -y gsfonts gsfonts-other gsfonts-x11 ttf-mscorefonts-installer t1-xfree86-nonfree fonts-alee ttf-ancient-fonts fonts-arabeyes fonts-arphic-bsmi00lp fonts-arphic-gbsn00lp fonts-bpg-georgian fonts-dustin fonts-f500 fonts-sil-gentium ttf-georgewilliams ttf-isabella fonts-larabie-deco fonts-larabie-straight fonts-larabie-uncommon ttf-sjfonts ttf-staypuft ttf-summersby fonts-ubuntu-title ttf-xfree86-nonfree xfonts-intl-european xfonts-jmk xfonts-terminus fonts-arphic-uming fonts-ipafont-mincho fonts-ipafont-gothic fonts-unfonts-core hplip exfat-utils chromium-browser imagemagick xsane
+	# Polices (jeu réduit — plusieurs anciens paquets ttf-* ne sont plus fournis)
+	apt-get install -y \
+		gsfonts gsfonts-other gsfonts-x11 \
+		ttf-mscorefonts-installer \
+		fonts-liberation fonts-dejavu-core fonts-noto-core \
+		fonts-ubuntu-title \
+		xfonts-terminus xfonts-intl-european xfonts-jmk \
+		fonts-ipafont-gothic fonts-ipafont-mincho \
+		t1-xfree86-nonfree fonts-alee
 
-	# Installation de l'imprimante
-	apt-get install -y hplip hplip-data hplip-doc hpijs-ppds hplip-gui printer-driver-hpcups printer-driver-hpijs printer-driver-pxljr
+	# Chromium : métapaquet chromium-browser (transitional → snap) ou paquet chromium selon les dépôts
+	apt-get install -y chromium-browser \
+		|| apt-get install -y chromium
 
-	# Installation de Gdebi pour résoudre les dépendances de l'installation de CTparental
+	# Impression (jeu minimal — hpijs / vieux pilotes souvent fusionnés dans hplip)
+	apt-get install -y hplip hplip-gui printer-driver-hpcups \
+		|| apt-get install -y hplip hplip-data hplip-doc hplip-gui printer-driver-hpcups hpijs-ppds
+
+	# Gdebi (CTparental / paquets .deb locaux)
 	apt-get install -y gdebi
 
-	# Installation des locales
-	apt-get install firefox-locale-fr aspell-fr myspell-fr
+	# Français : orthographe ; firefox-locale-fr utile si Firefox est en paquet deb (sinon snap : langue à régler autrement)
+	apt-get install -y aspell-fr hunspell-fr myspell-fr || apt-get install -y aspell-fr hunspell-fr
+	apt-get install -y firefox-locale-fr || true
 
 
 	# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
