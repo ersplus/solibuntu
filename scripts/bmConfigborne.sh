@@ -79,9 +79,9 @@ fi
 	echo "# Mise à jour" ; apt install -f
 	echo "60" ; sleep 1
 	echo "# Maj Solibuntu"
-	echo "90" ;
+		echo "90" ;
 		# Lance le script d'installation
-		cd /Solibuntu
+		cd "$repinstallation/scripts"
 		./install.sh maj
 	echo "# Mise à jour" ; apt autoremove --purge -y
 	echo "95" ; sleep 1

@@ -1,6 +1,6 @@
 #!/bin/bash
 touch /tmp/sessionstarted
 
-if [ $USER == "administrateur" -o $USER == "gestionnaire" ] ; then
-	echo "1" > /root/.lastadminlogin
+if [ "$USER" = "administrateur" ] || [ "$USER" = "gestionnaire" ]; then
+	echo "1" | sudo -n /usr/bin/tee /root/.lastadminlogin >/dev/null || true
 fi

@@ -33,6 +33,8 @@ repinstallation="/opt/borne"
 
 [ `whoami` = root ] || { gksudo "$0" "$@"; exit $?; }
 
+result_file=$(mktemp)
+trap 'rm -f "$result_file"' EXIT
 (
 	echo "10" ; sleep 1
 	echo "# Vérification des mises à jour" ; sudo apt update
@@ -46,7 +48,7 @@ repinstallation="/opt/borne"
 	#echo "# Installation des dépendances"; sudo apt-get install -y clamav clamav-base clamav-freshclam console-data dansguardian dnsmasq gamin iptables-persistent libclamav7 libgamin0 libllvm3.6v5 liblua5.1-0 libnss3-tools lighttpd lighttpd-mod-magnet netfilter-persistent php-cgi php-common php-xml php7.0-cgi php7.0-cli php7.0-common php7.0-json php7.0-opcache php7.0-readline php7.0-xml privoxy spawn-fcgi
 	#echo "60" ; sleep 1
 	echo "# Installation filtrage"; installFiltrage
-	result=$?
+	echo $? > "$result_file"
 	echo "70" ; sleep 1
 	#echo "# Configuation du proxy" ; sudo cp -rf /opt/borne/share/proxy/defaulton /etc/chromium-browser/default
 	echo "80" ; sleep 1
@@ -62,8 +64,8 @@ repinstallation="/opt/borne"
 	#if [ "$?" = -1 ] ; then
 	#	zenity --error --text="Installation annulée."
 	#fi
-	return $result
-exit 0
+	result=$(cat "$result_file")
+	exit "${result:-1}"
 
 
 

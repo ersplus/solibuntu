@@ -8,11 +8,14 @@
 
 repinstallation="/opt/borne"
 
-if [ $1 == "installation" ] ; then
-	groupadd Solibuntu
-	useradd root Solibuntu
-	useradd administrateur Solibuntu
-	useradd gestionnaire Solibuntu
+if [ "$1" = "installation" ] ; then
+	getent group Solibuntu >/dev/null 2>&1 || groupadd Solibuntu
+	if ! id -u administrateur >/dev/null 2>&1; then
+		useradd -m -g Solibuntu administrateur
+	fi
+	if ! id -u gestionnaire >/dev/null 2>&1; then
+		useradd -m -g Solibuntu gestionnaire
+	fi
 	chgrp Solibuntu /root/
 	chmod 774 /root/
 fi
@@ -84,7 +87,7 @@ if [ $? == 0 ] ; then
 
 	echo "Installation logicielle"
 	apt-get update
-	if [ $1 != "iso" ] ; then
+	if [ "$1" != "iso" ] ; then
 		apt-get full-upgrade -y && apt install -f && apt-get clean
 	fi
 
@@ -111,8 +114,8 @@ if [ $? == 0 ] ; then
 
 
 	# Désinstallation des extensions de Thunar Ouvrir dans un terminal etc.
-	if [ $1 != "iso" ] ; then
-		dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']"
+	if [ "$1" != "iso" ] ; then
+		dconf write /org/mate/caja/extensions/disabled-extensions "['libcaja-main-menu,'libcaja-sento','libcaja-python','libcaja-pythin','libcaja-wallpaper','libcaja-gksu','libcaja-engrampa','libcaja-open-terminal','libcatril-properties-page']" 2>/dev/null || true
 		apt-get install printer-driver-cups-pdf
 	fi
 
@@ -169,7 +172,7 @@ if [ $? == 0 ] ; then
 	cp /opt/borne/scripts/sessionStart.desktop /etc/xdg/autostart/sessionStart.desktop
 
 	#Copie des profils
-	if [ $1 != "maj" ] ; then
+	if [ "$1" != "maj" ] ; then
 		cp /opt/borne/share/skel_admin.tar.gz /home/
 		cp /opt/borne/share/skel_gest.tar.gz /home/
 		cd /home/
