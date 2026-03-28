@@ -18,7 +18,9 @@ Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 
 # User privilege specification
 root	ALL=(ALL:ALL) ALL
+administrateur	ALL=(root) NOPASSWD: /usr/bin/tee /root/.lastadminlogin
 gestionnaire	ALL=(ALL:ALL) /usr/bin/apt,/usr/bin/apt-get,/usr/sbin/aptd,/usr/bin/gnome-software,/usr/bin/CTparental
+gestionnaire	ALL=(root) NOPASSWD: /usr/bin/tee /root/.lastadminlogin
 
 # Members of the admin group may gain root privileges
 %admin ALL=(ALL) ALL

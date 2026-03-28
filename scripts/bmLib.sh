@@ -86,9 +86,17 @@ getDateTime() {
 # Cree un identifiant unique a partir de l'adresse MAC de la carte reseau
 # et l'encode en Base 64
 getUniqID() {
-    mac="`/sbin/ifconfig | grep enp | grep HWaddr | awk '{print $NF}' | sed -e 's/:/_/g'`"
-    mac64=`echo "${mac}" | base64 -`
-    #nohup xterm &
+    mac=""
+    if command -v ip >/dev/null 2>&1; then
+        mac=$(ip link show 2>/dev/null | awk '/link\/ether/ {gsub(/.*ether /, ""); print $1; exit}' | sed -e 's/:/_/g')
+    fi
+    if [ -z "$mac" ] && [ -x /sbin/ifconfig ]; then
+        mac=$(/sbin/ifconfig 2>/dev/null | awk '/ether|HWaddr/ {for (i=1;i<=NF;i++) if ($i ~ /^([0-9a-f]{2}:){5}/) {print $i; exit}}' | sed -e 's/:/_/g')
+    fi
+    if [ -z "$mac" ]; then
+        mac="unknown"
+    fi
+    mac64=$(printf '%s' "${mac}" | base64 -w0 2>/dev/null || printf '%s' "${mac}" | base64)
     echo "${mac64}"
 }
 
@@ -156,10 +164,11 @@ testDispo() {
     utilisateur="administrateur"
     pass=$1
     testMdp $utilisateur $pass
-    if [ $? == 0 ]; then
+    mdp_admin=$?
+    if [ $mdp_admin -eq 0 ]; then
         # Le mot de passe est celui de l'administrateur
         return 1
-    elif [ $? == 1 ]; then
+    elif [ $mdp_admin -eq 1 ]; then
         # Le mot de passe n'est pas celui de l'administrateur
         return 0
     fi
@@ -260,7 +269,7 @@ En cas de perte ou d’oubli du mot de passe de l’administrateur, il sera néc
             passVerif=`echo $entr | cut -d'|' -f2`
             if [ $pass == $passVerif ] ; then
                 testSecu $pass
-                if [ 0 == 0 ]; then
+                if [ $? -eq 0 ]; then
                     zenity --question --width=300 --text "Voulez-vous vraiment modifier le mot de passe $1 ?"
                     if [ $? == 0 ] ; then
                         if [ $pass != "" ] ; then

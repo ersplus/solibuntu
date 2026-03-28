@@ -107,8 +107,9 @@ while [ $ret -ne 0 ]
 
 			# Teste si le mot de passe correspond au compte "gestionnaire"
 			testMdp $user $pass
+			mdp_gest=$?
 
-			if [ $? == 0 ];then
+			if [ $mdp_gest -eq 0 ]; then
 
 				# Teste si le mot de passe du gestionnaire est celui par défaut
 				if [ $pass == "AdminAsso" ] ; then
@@ -134,7 +135,7 @@ jamais été changé. Veuillez le signaler à l'administrateur de Solibuntu."
 				fi
 				# Appel le script du panneau de configuration en indiquant le compte gestionnaire
 				$repinstallation/scripts/bmConfigborne.sh gestionnaire
-			elif [ $? == 1 ];then
+			elif [ $mdp_gest -eq 1 ]; then
 				# Teste si le mot de passe est celui du compte administrateur
 				user="administrateur"
 				testMdp $user $pass
