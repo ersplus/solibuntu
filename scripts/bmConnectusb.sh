@@ -96,7 +96,7 @@ while [ $ret -ne 0 ]
 
 	ret=$?
 
-# [ `whoami` = root ] || { gksudo "$0" "$@"; exit $?; }
+# Élévation root : utiliser pkexec ou sudo (voir scripts/libRootGui.sh)
 
 		case ${ret} in
 			1)
